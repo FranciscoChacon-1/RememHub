@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp"
+    tools:context=".detalles_de_tarea">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/seleccionar_tarea"
+        android:textStyle="bold" />
+
+
+    <Spinner
+        android:id="@+id/spTarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:padding="12dp"
+        android:spinnerMode="dropdown"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <!-- EditText para título de la tarea -->
+    <EditText
+        android:id="@+id/etTituloTarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/titulo_de_tarea"
+        android:inputType="text"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <!-- EditText para descripción -->
+    <EditText
+        android:id="@+id/etDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/descripcion"
+        android:inputType="textMultiLine"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <!-- TextView para seleccionar fecha -->
+    <TextView
+        android:id="@+id/tvFecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:hint="@string/seleccionar_fecha"
+        android:padding="12dp" />
+
+    <!-- TextView para seleccionar hora -->
+    <TextView
+        android:id="@+id/tvHora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:hint="@string/seleccionar_hora"
+        android:padding="12dp" />
+
+    <!-- TextView para el título de categorías -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/categoria"
+        android:textStyle="bold" />
+
+    <!-- Spinner para categorías -->
+    <Spinner
+        android:id="@+id/spCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:padding="12dp"
+        android:spinnerMode="dropdown"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <!-- Checkbox para completada -->
+    <CheckBox
+        android:id="@+id/checkBoxCompletada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/completada" />
+
+    <!-- Layout para botones eliminar y editar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- Botón para eliminar -->
+        <Button
+            android:id="@+id/btnEliminar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/eliminar"
+            tools:ignore="ButtonStyle" />
+
+        <!-- Botón para editar -->
+        <Button
+            android:id="@+id/btnEditar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/editar"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+</LinearLayout>

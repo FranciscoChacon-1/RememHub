@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">RememHub</string>
+    <string name="titulo_de_tarea">Título de tarea</string>
+    <string name="descripcion">Descripción</string>
+    <string name="categoria">Categoría</string>
+    <string name="seleccionar_hora">Seleccionar Hora</string>
+    <string name="seleccionar_fecha">Seleccionar Fecha</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="editar">Editar</string>
+    <string name="completada">Completada</string>
+    <string name="seleccionar_tarea">Seleccionar Tarea</string>
+    <string name="sonido">Sonido</string>
+    <string name="notificaci_n_extraordinaria">Notificación extraordinaria</string>
+    <string name="_5_minutos_antes_default">5 minutos antes (Default)</string>
+    <string name="vibraci_n">Vibración</string>
+    <string name="_5_minutos_antes">5 minutos antes</string>
+    <string name="_15_minutos_antes">15 minutos antes</string>
+    <string name="_30_minutos_antes">30 minutos antes</string>
+    <string name="_1_hora_antes">1 hora antes</string>
+    <string name="_2_horas_antes">2 horas antes</string>
 </resources>
