@@ -18,4 +18,6 @@
     <string name="_30_minutos_antes">30 minutos antes</string>
     <string name="_1_hora_antes">1 hora antes</string>
     <string name="_2_horas_antes">2 horas antes</string>
+    <string name="fecha">Fecha</string>
+    <string name="buscar">Buscar</string>
 </resources>
