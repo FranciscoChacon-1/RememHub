@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">RememHub</string>
+    <string name="todo2">todo2</string>
+    <string name="dias_de_recordatorio">Dias de Recordatorio</string>
+    <string name="todo3">todo3</string>
+    <string name="hora_de_recordatorio">Hora de recordatorio</string>
+    <string name="configurar_recordatorio">Configurar Recordatorio</string>
+    <string name="todo">todo</string>
+    <string name="fecha">fecha</string>
+    <string name="fecha_de_tarea">Fecha de tarea</string>
+    <string name="descripcion_opcional">Descripcion(opcional)</string>
+    <string name="titulo_de_la_tarea">Titulo de la tarea</string>
+    <string name="a_adir_una_nueva_tarea">Añadir una nueva tarea</string>
+    <string name="todo4">TODO</string>
+    <string name="todo6">TODO</string>
 </resources>
