@@ -20,22 +20,4 @@
     <string name="_2_horas_antes">2 horas antes</string>
     <string name="fecha">Fecha</string>
     <string name="buscar">Buscar</string>
-    <string name="menu_icon">Icono del menú</string>
-    <string name="txt1">Añadir Tarea</string>
-    <string name="txt2">Detalle de Tarea</string>
-    <string name="txt3">Historial</string>
-    <string name="txt4">Categorías</string>
-    <string name="txt5">Papelera</string>
-    <string name="txt6">Configuración</string>
-    <string name="txt7">Resumen</string>
-    <string name="title_action_bar">Menú</string>
-    <string-array name="menu_items">
-        <item>Añadir Tarea</item>
-        <item>Detalle de tarea</item>
-        <item>Historial</item>
-        <item>Categorías</item>
-        <item>Papelera</item>
-        <item>Configuración</item>
-        <item>Resumen</item>
-    </string-array>
 </resources>
