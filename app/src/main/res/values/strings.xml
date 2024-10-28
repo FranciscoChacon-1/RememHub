@@ -20,4 +20,10 @@
     <string name="_2_horas_antes">2 horas antes</string>
     <string name="fecha">Fecha</string>
     <string name="buscar">Buscar</string>
+    <string-array name="categories_array">
+        <item>Todas las categorías</item>
+        <item>Categoría 1</item>
+        <item>Categoría 2</item>
+        <!-- Agrega más categorías según lo necesites -->
+    </string-array>
 </resources>
