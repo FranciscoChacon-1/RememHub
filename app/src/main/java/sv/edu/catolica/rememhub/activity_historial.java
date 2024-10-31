@@ -1,7 +1,11 @@
 package sv.edu.catolica.rememhub;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,9 +16,6 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +26,7 @@ public class activity_historial extends AppCompatActivity {
     private Button dateButton;
     private Calendar selectedDate;
     private LinearLayout taskContainer;
+    private RememhubBD dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,46 +34,65 @@ public class activity_historial extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_historial);
 
+        dbHelper = new RememhubBD(this);
         dateButton = findViewById(R.id.dateButton);
-        //taskContainer = findViewById(R.id.main);
+        taskContainer = findViewById(R.id.taskContainer); // Contenedor para las tareas dinámicas
 
-        // Selector de fecha
         dateButton.setOnClickListener(v -> openDatePicker());
 
-        // Inicializamos la lista de tareas (una por ahora)
-        initTask();
+        // Cargar y mostrar tareas de la base de datos
+        loadTasks();
     }
 
-    private void initTask() {
-        // Ejemplo de tarea
-        CheckBox taskCheckBox = findViewById(R.id.taskCheckBox);
-        TextView taskTitle = findViewById(R.id.taskTitle);
-        TextView taskCategory = findViewById(R.id.taskCategory);
+    private void loadTasks() {
+        taskContainer.removeAllViews(); // Limpiar contenedor antes de agregar nuevas tareas
 
-        taskTitle.setText("Tarea 1");
-        taskCategory.setText("Categoría 1");
+        // Abrir base de datos en modo lectura
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT T.id, T.titulo, T.fecha_cumplimiento, C.nombre AS categoria FROM Tareas T " +
+                "LEFT JOIN Categorias C ON T.categoria_id = C.id", null);
 
-        // Aquí puedes implementar la lógica de la base de datos para obtener las tareas
+        // Iterar sobre los resultados y crear vistas para cada tarea
+        if (cursor.moveToFirst()) {
+            do {
+                View taskView = LayoutInflater.from(this).inflate(R.layout.task_item_layout, taskContainer, false);
+
+                CheckBox taskCheckBox = taskView.findViewById(R.id.taskCheckBox);
+                TextView taskTitle = taskView.findViewById(R.id.taskTitle);
+                TextView taskDate = taskView.findViewById(R.id.taskDate);
+                TextView taskCategory = taskView.findViewById(R.id.taskCategory);
+
+                String title = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"));
+                String category = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
+
+                taskTitle.setText(title);
+                taskDate.setText(date != null ? date : "Sin fecha");
+                taskCategory.setText(category != null ? category : "Sin categoría");
+
+                // Agregar la vista de tarea al contenedor
+                taskContainer.addView(taskView);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
     }
 
     private void openDatePicker() {
         final Calendar calendar = Calendar.getInstance();
 
-        // Crear el DatePickerDialog con un botón de "Cancel"
         DatePickerDialog datePicker = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
                     calendar.set(year, month, dayOfMonth);
-                    selectedDate = calendar;  // Guardar la fecha seleccionada
+                    selectedDate = calendar;
                     updateDateButton(calendar);
                 },
                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-        // Añadir un botón de "Cancel" al DatePickerDialog
         datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> {
             if (which == DatePickerDialog.BUTTON_NEGATIVE) {
-                // Restablecer la fecha seleccionada y el texto del botón
-                selectedDate = null;  // Borrar la fecha seleccionada
-                dateButton.setText(R.string.fecha);  // Texto por defecto en el botón
+                selectedDate = null;
+                dateButton.setText(R.string.fecha);
             }
         });
 
@@ -82,14 +103,11 @@ public class activity_historial extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         dateButton.setText(dateFormat.format(calendar.getTime()));
 
-        // Filtrar las tareas según la fecha seleccionada
         filterTasksByDate(calendar);
     }
 
     private void filterTasksByDate(Calendar selectedDate) {
-        // Lógica para filtrar las tareas por la fecha seleccionada
-        // Aquí debes hacer la consulta a tu base de datos para obtener las tareas
-        // correspondientes a esa fecha.
-        // Si no hay una fecha seleccionada, muestra todas las tareas.
+        // Aquí podrías implementar el filtrado de tareas según la fecha seleccionada
+        loadTasks(); // Llamamos a loadTasks para cargar todas las tareas
     }
 }
