@@ -8,32 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnAbrirDetalles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Abrir Detalles de Tarea" />
 
-    <Button
-        android:id="@+id/btnAbrirConfiguracion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Abrir Configuracion"
-        android:onClick="AbrirConfi"
-        />
-    <Button
-        android:id="@+id/btnAbrirHistorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Abrir Historial"
-        android:onClick="AbrirHisto"
-        />
-    <Button
-        android:id="@+id/btnAbrirResumen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Abrir Resumen"
-        android:onClick="AbrirResu"
-        />
 
 </LinearLayout>
