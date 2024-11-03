@@ -32,11 +32,11 @@ public class tareas_pendientes_inicio extends AppCompatActivity {
         recyclerViewEstaSemana.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewSiguienteSemana.setLayoutManager(new LinearLayoutManager(this));
 
-        listaTareasEstaSemana = new ArrayList<>();
-        listaTareasSiguienteSemana = new ArrayList<>();
+        TareaDataAccess tareaDataAccess = new TareaDataAccess(this);
 
-        listaTareasEstaSemana.add(new Tarea("Tarea 1", "Categoría 1", "01, 10, 2024", false));
-        listaTareasSiguienteSemana.add(new Tarea("Tarea 2", "Categoría 2", "08, 10, 2024", false));
+        // Cargar tareas desde la base de datos
+        listaTareasEstaSemana = tareaDataAccess.obtenerTareasSemana(true);
+        listaTareasSiguienteSemana = tareaDataAccess.obtenerTareasSemana(false);
 
         tareaAdapterEstaSemana = new TareaAdapter(this, listaTareasEstaSemana);
         tareaAdapterSiguienteSemana = new TareaAdapter(this, listaTareasSiguienteSemana);
@@ -44,7 +44,6 @@ public class tareas_pendientes_inicio extends AppCompatActivity {
         recyclerViewEstaSemana.setAdapter(tareaAdapterEstaSemana);
         recyclerViewSiguienteSemana.setAdapter(tareaAdapterSiguienteSemana);
     }
-
     public void Dirigir(View view) {
 
     }

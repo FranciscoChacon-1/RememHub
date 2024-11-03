@@ -15,9 +15,12 @@ import java.util.List;
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
     private List<Tarea> listaTareas;
     private Context context;
+    private TareaDataAccess tareaDataAccess; // Acceso a la base de datos
+
     public TareaAdapter(Context context, List<Tarea> listaTareas) {
         this.context = context;
         this.listaTareas = listaTareas;
+        this.tareaDataAccess = new TareaDataAccess(context); // Inicialización del acceso a datos
     }
 
     @NonNull
@@ -36,15 +39,16 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
         holder.textViewFechaTarea.setText(tarea.getFecha());
 
         holder.checkBoxTarea.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (isChecked && !tarea.isCompletada()) { // Solo actualiza si no estaba completada
                 new AlertDialog.Builder(context)
                         .setTitle("Finalizar tarea")
                         .setMessage("¿Finalizar tarea?")
                         .setPositiveButton("Sí", (dialog, which) -> {
                             tarea.setCompletada(true);
+                            tareaDataAccess.marcarTareaComoCompletada(tarea); // Llamada para actualizar la base de datos
                         })
                         .setNegativeButton("No", (dialog, which) -> {
-                            holder.checkBoxTarea.setChecked(false); //
+                            holder.checkBoxTarea.setChecked(false);
                         })
                         .show();
             }

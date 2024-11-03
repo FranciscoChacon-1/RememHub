@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
     android:orientation="vertical"
     tools:context=".tareas_pendientes_inicio">
 
+    <!-- Título Esta Semana -->
     <TextView
         android:id="@+id/textViewEstaSemana"
         android:layout_width="wrap_content"
@@ -16,17 +14,18 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:text="Esta semana"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:paddingBottom="8dp"
-        tools:ignore="MissingConstraints" />
+        android:paddingBottom="8dp" />
 
+    <!-- RecyclerView para las tareas de Esta Semana -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEstaSemana"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scrollbars="vertical"
-        android:layout_marginBottom="16dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginBottom="16dp" />
 
+    <!-- Título Siguiente Semana -->
     <TextView
         android:id="@+id/textViewSiguienteSemana"
         android:layout_width="wrap_content"
@@ -34,23 +33,24 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:text="Siguiente semana"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:paddingBottom="8dp"
-        tools:ignore="MissingConstraints" />
+        android:paddingBottom="8dp" />
 
+    <!-- RecyclerView para las tareas de la Siguiente Semana -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSiguienteSemana"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scrollbars="vertical"
-        android:layout_marginBottom="16dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginBottom="16dp" />
 
+    <!-- Botón de Menú -->
     <Button
         android:id="@+id/buttonMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Menú"
         android:layout_marginTop="16dp"
-        android:onClick="Dirigir"
-        tools:ignore="MissingConstraints" />
+        android:layout_gravity="center_horizontal"
+        android:onClick="Dirigir" />
 </LinearLayout>
