@@ -1,77 +1,67 @@
 package sv.edu.catolica.rememhub;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
-    private List<Tarea> listaTareas;
-    private Context context;
-    private TareaDataAccess tareaDataAccess; // Acceso a la base de datos
 
-    public TareaAdapter(Context context, List<Tarea> listaTareas) {
+    private Context context;
+    private List<Tarea> tareas;
+
+    public TareaAdapter(Context context, List<Tarea> tareas) {
         this.context = context;
-        this.listaTareas = listaTareas;
-        this.tareaDataAccess = new TareaDataAccess(context); // Inicialización del acceso a datos
+        this.tareas = tareas;
     }
 
-    @NonNull
     @Override
-    public TareaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tarea, parent, false);
+    public TareaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // Asegúrate de que la ruta del layout sea correcta
+        View view = LayoutInflater.from(context).inflate(R.layout.item_tarea, parent, false);
         return new TareaViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TareaViewHolder holder, int position) {
-        Tarea tarea = listaTareas.get(position);
-        holder.checkBoxTarea.setChecked(tarea.isCompletada());
+    public void onBindViewHolder(TareaViewHolder holder, int position) {
+        Tarea tarea = tareas.get(position);
         holder.textViewNombreTarea.setText(tarea.getNombre());
         holder.textViewCategoriaTarea.setText(tarea.getCategoria());
         holder.textViewFechaTarea.setText(tarea.getFecha());
 
+        // Si la tarea está completada, actualiza el estado del CheckBox
+        holder.checkBoxTarea.setChecked(tarea.isCompletada());
+
+        // Acción cuando se marca o desmarca el CheckBox
         holder.checkBoxTarea.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked && !tarea.isCompletada()) { // Solo actualiza si no estaba completada
-                new AlertDialog.Builder(context)
-                        .setTitle("Finalizar tarea")
-                        .setMessage("¿Finalizar tarea?")
-                        .setPositiveButton("Sí", (dialog, which) -> {
-                            tarea.setCompletada(true);
-                            tareaDataAccess.marcarTareaComoCompletada(tarea); // Llamada para actualizar la base de datos
-                        })
-                        .setNegativeButton("No", (dialog, which) -> {
-                            holder.checkBoxTarea.setChecked(false);
-                        })
-                        .show();
-            }
+            tarea.setCompletada(isChecked);
+            // Aquí puedes agregar lógica para actualizar la tarea en la base de datos
+            // tareaDataAccess.marcarTareaComoCompletada(tarea);  // Esto si tienes acceso a la base de datos
         });
     }
 
     @Override
     public int getItemCount() {
-        return listaTareas.size();
+        return tareas.size();
     }
 
     public static class TareaViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBoxTarea;
+
         TextView textViewNombreTarea;
         TextView textViewCategoriaTarea;
         TextView textViewFechaTarea;
+        CheckBox checkBoxTarea;
 
-        public TareaViewHolder(@NonNull View itemView) {
+        public TareaViewHolder(View itemView) {
             super(itemView);
-            checkBoxTarea = itemView.findViewById(R.id.checkBoxTarea);
             textViewNombreTarea = itemView.findViewById(R.id.textViewNombreTarea);
             textViewCategoriaTarea = itemView.findViewById(R.id.textViewCategoriaTarea);
             textViewFechaTarea = itemView.findViewById(R.id.textViewFechaTarea);
+            checkBoxTarea = itemView.findViewById(R.id.checkBoxTarea);
         }
     }
 }

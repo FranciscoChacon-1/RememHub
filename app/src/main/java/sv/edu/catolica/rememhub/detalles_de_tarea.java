@@ -1,5 +1,6 @@
 package sv.edu.catolica.rememhub;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.database.Cursor;
@@ -149,7 +150,7 @@ public class detalles_de_tarea extends AppCompatActivity {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(
+        @SuppressLint("DefaultLocale") TimePickerDialog timePickerDialog = new TimePickerDialog(
                 this,
                 (view, hourOfDay, minute1) -> tvHora.setText(String.format("%02d:%02d", hourOfDay, minute1)),
                 hour, minute, true

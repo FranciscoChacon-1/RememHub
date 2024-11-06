@@ -1,10 +1,15 @@
 package sv.edu.catolica.rememhub;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RememhubBD extends SQLiteOpenHelper {
 
@@ -92,4 +97,38 @@ public class RememhubBD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Papelera");
         onCreate(db);
     }
+
+    public List<Tarea> obtenerTareas() {
+        List<Tarea> tareas = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Consulta SQL con JOIN para obtener los datos de Tareas y Categorias
+        Cursor cursor = db.rawQuery("SELECT Tareas.titulo, Tareas.fecha_creacion, Categorias.nombre AS categoria " +
+                "FROM Tareas " +
+                "JOIN Categorias ON Tareas.categoria_id = Categorias.id", null);
+
+        // Verificar si el cursor contiene resultados
+        if (cursor.moveToFirst()) {
+            do {
+                // Obtener los valores de las columnas
+                @SuppressLint("Range") String nombre = cursor.getString(cursor.getColumnIndex("titulo"));
+                @SuppressLint("Range") String fecha = cursor.getString(cursor.getColumnIndex("fecha_creacion"));
+                @SuppressLint("Range") String categoria = cursor.getString(cursor.getColumnIndex("categoria")); // Usamos el alias "categoria"
+
+                // Crear el objeto Tarea con los datos obtenidos
+                Tarea tarea = new Tarea(nombre, categoria, fecha, false); // Asumimos que la tarea no está completada
+                tareas.add(tarea);
+            } while (cursor.moveToNext()); // Continuar con el siguiente registro
+        }
+
+        // Cerrar el cursor y la base de datos
+        cursor.close();
+        db.close();
+
+        // Retornar la lista de tareas
+        return tareas;
+    }
+
+
+
 }

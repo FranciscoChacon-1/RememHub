@@ -1,48 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:layout_marginBottom="8dp">
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <CheckBox
-            android:id="@+id/checkBoxTarea"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkBoxTarea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/textViewNombreTarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tarea X"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+            android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/textViewCategoriaTarea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoría X"
+                android:textSize="14sp"
+                android:textColor="#888888"
+                android:maxLines="1"
+            android:ellipsize="end" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textViewNombreTarea"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Tarea X"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/textViewCategoriaTarea"
+            android:id="@+id/textViewFechaTarea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categoría X"
+            android:text="DD, MM, YYYY"
             android:textSize="14sp"
-            android:textColor="#888888"/>
+            android:textColor="#888888"
+            android:paddingTop="4dp"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewFechaTarea"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DD, MM, YYYY"
-        android:textSize="14sp"
-        android:textColor="#888888"
-        android:paddingTop="4dp"/>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

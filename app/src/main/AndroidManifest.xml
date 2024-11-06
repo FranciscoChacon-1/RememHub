@@ -31,9 +31,6 @@
             android:name=".menu_inicio"
             android:exported="false"/>
         <activity
-            android:name=".activity_resumen"
-            android:exported="false"/>
-        <activity
             android:name=".tareas_pendientes_inicio"
             android:exported="true">
         <intent-filter>
