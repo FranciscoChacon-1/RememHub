@@ -1,5 +1,6 @@
 package sv.edu.catolica.rememhub;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,7 +20,45 @@ public class menu_inicio extends AppCompatActivity {
 
     }
 
-    public void AddTarea(View view) {
+    public void AnadirTarea(View view) {
+        /*Intent intent;
+        intent = new Intent(this, menu_inicio.class);
+        startActivity(intent);*/
+    }
 
+    public void DetalleTarea(View view) {
+        Intent intent;
+        intent = new Intent(this, detalles_de_tarea.class);
+        startActivity(intent);
+    }
+
+    public void Historial(View view) {
+        Intent intent;
+        intent = new Intent(this, activity_historial.class);
+        startActivity(intent);
+    }
+
+    public void Categorias(View view) {
+        /*Intent intent;
+        intent = new Intent(this, menu_inicio.class);
+        startActivity(intent);*/
+    }
+
+    public void Papelera(View view) {
+        /*Intent intent;
+        intent = new Intent(this, menu_inicio.class);
+        startActivity(intent);*/
+    }
+
+    public void Configuracion(View view) {
+        Intent intent;
+        intent = new Intent(this, activity_configuracion.class);
+        startActivity(intent);
+    }
+
+    public void Resumen(View view) {
+        Intent intent;
+        intent = new Intent(this, activity_resumen.class);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package sv.edu.catolica.rememhub;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -45,6 +46,8 @@ public class tareas_pendientes_inicio extends AppCompatActivity {
         recyclerViewSiguienteSemana.setAdapter(tareaAdapterSiguienteSemana);
     }
     public void Dirigir(View view) {
-
+        Intent intent;
+        intent = new Intent(this, menu_inicio.class);
+        startActivity(intent);
     }
 }

@@ -22,7 +22,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="AnadirTarea">
 
         <ImageView
             android:id="@+id/iconImageView"
@@ -52,7 +53,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="DetalleTarea">
 
         <ImageView
             android:id="@+id/iconImageView2"
@@ -82,7 +84,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="Historial">
 
         <ImageView
             android:id="@+id/iconImageView3"
@@ -112,7 +115,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="Categorias">
 
         <ImageView
             android:id="@+id/iconImageView4"
@@ -142,7 +146,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="Papelera">
 
         <ImageView
             android:id="@+id/iconImageView5"
@@ -172,7 +177,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="Configuracion">
 
         <ImageView
             android:id="@+id/iconImageView6"
@@ -202,7 +208,8 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:background="@android:color/white"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:onClick="Resumen">
 
         <ImageView
             android:id="@+id/iconImageView7"
