@@ -86,7 +86,17 @@ public class RememhubBD extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
                 "VALUES ('Estudiar para examen', 'Revisar los capítulos 1 a 5', 1, '2024-10-01', '2024-10-03', '10:00', '09:00', 0);");
         db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
-                "VALUES ('Comprar comestibles', 'Ir al supermercado para la despensa semanal', 4, '2024-10-01', '2024-10-05', '17:00', '16:00', 0);");
+                "VALUES ('Comprar comestibles', 'Ir al supermercado', 4, '2024-10-01', '2024-10-05', '17:00', '16:00', 0);");
+        db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
+                "VALUES ('Comprar mikasa', 'Ir al supermercado', 4, '2024-10-01', '2024-10-05', '17:00', '16:00', 0);");
+        db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
+                "VALUES ('Comprar ', 'Ir al centrocomercial', 4, '2024-10-01', '2024-11-20', '17:00', '16:00', 0);");
+        db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
+                "VALUES ('Comprar algo ', 'Ir al centrocomercial', 4, '2024-10-01', '2024-11-20', '17:00', '16:00', 0);");
+        db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
+                "VALUES ('Comprar no se', 'Ir al centrocomercial', 4, '2024-10-01', '2024-11-20', '17:00', '16:00', 0);");
+        db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
+                "VALUES ('Comprar no se x2', 'Ir al centrocomercial', 4, '2024-10-01', '2024-11-20', '17:00', '16:00', 0);");
     }
 
     @Override
@@ -97,7 +107,6 @@ public class RememhubBD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Papelera");
         onCreate(db);
     }
-
     public List<Tarea> obtenerTareas() {
         List<Tarea> tareas = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -128,6 +137,7 @@ public class RememhubBD extends SQLiteOpenHelper {
         // Retornar la lista de tareas
         return tareas;
     }
+
 
 
 

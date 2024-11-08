@@ -7,17 +7,15 @@
     android:orientation="vertical"
     tools:context=".tareas_pendientes_inicio">
 
-    <!-- Título Esta Semana -->
     <TextView
         android:id="@+id/textViewEstaSemana"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Esta semana"
+        android:text="@string/texto"
         android:textSize="18sp"
         android:textStyle="bold"
         android:paddingBottom="8dp" />
 
-    <!-- RecyclerView para las tareas de Esta Semana -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEstaSemana"
         android:layout_width="match_parent"
@@ -25,18 +23,25 @@
         android:scrollbars="vertical"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:id="@+id/mensajeEstaSemana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/txtmensajee"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="8dp" />
 
-    <!-- Título Siguiente Semana -->
     <TextView
         android:id="@+id/textViewSiguienteSemana"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Siguiente semana"
+        android:text="@string/txtmensajes"
         android:textSize="18sp"
         android:textStyle="bold"
         android:paddingBottom="8dp" />
 
-    <!-- RecyclerView para las tareas de la Siguiente Semana -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSiguienteSemana"
         android:layout_width="match_parent"
@@ -45,12 +50,21 @@
         android:scrollbars="vertical"
         android:layout_marginBottom="16dp" />
 
-    <!-- Botón de Menú -->
+    <TextView
+        android:id="@+id/mensajeSiguienteSemana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/mensaje"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="8dp" />
+
     <Button
         android:id="@+id/buttonMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Menú"
+        android:text="@string/txtbutton"
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
         android:onClick="Dirigir" />

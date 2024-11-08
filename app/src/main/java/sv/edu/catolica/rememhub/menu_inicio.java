@@ -45,9 +45,9 @@ public class menu_inicio extends AppCompatActivity {
     }
 
     public void Papelera(View view) {
-        /*Intent intent;
-        intent = new Intent(this, menu_inicio.class);
-        startActivity(intent);*/
+        Intent intent;
+        intent = new Intent(this, PapeleraActivity.class);
+        startActivity(intent);
     }
 
     public void Configuracion(View view) {
@@ -59,6 +59,11 @@ public class menu_inicio extends AppCompatActivity {
     public void Resumen(View view) {
         Intent intent;
         intent = new Intent(this, activity_resumen.class);
+        startActivity(intent);
+    }
+    public void Inicio(View view) {
+        Intent intent;
+        intent = new Intent(this, tareas_pendientes_inicio.class);
         startActivity(intent);
     }
 }

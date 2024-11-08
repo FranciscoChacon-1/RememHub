@@ -19,12 +19,6 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <CheckBox
-                android:id="@+id/checkBoxTarea"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp" />
-
             <TextView
                 android:id="@+id/textViewNombreTarea"
                 android:layout_width="0dp"

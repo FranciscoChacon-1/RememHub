@@ -1,67 +1,104 @@
 package sv.edu.catolica.rememhub;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
-import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
 
     private Context context;
-    private List<Tarea> tareas;
+    private List<Tarea> listaTareas;
+    private TareaDataAccess tareaDataAccess;
 
-    public TareaAdapter(Context context, List<Tarea> tareas) {
+    public TareaAdapter(Context context, List<Tarea> listaTareas) {
         this.context = context;
-        this.tareas = tareas;
+        this.listaTareas = listaTareas;
+        this.tareaDataAccess = new TareaDataAccess(context);
     }
 
     @Override
     public TareaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Asegúrate de que la ruta del layout sea correcta
-        View view = LayoutInflater.from(context).inflate(R.layout.item_tarea, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tarea, parent, false);
         return new TareaViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(TareaViewHolder holder, int position) {
-        Tarea tarea = tareas.get(position);
-        holder.textViewNombreTarea.setText(tarea.getNombre());
-        holder.textViewCategoriaTarea.setText(tarea.getCategoria());
-        holder.textViewFechaTarea.setText(tarea.getFecha());
+        Tarea tarea = listaTareas.get(position);
+        holder.textTitulo.setText(tarea.getNombre());
+        holder.textCategoria.setText(tarea.getCategoria());
+        holder.textFecha.setText(tarea.getFecha());
 
-        // Si la tarea está completada, actualiza el estado del CheckBox
-        holder.checkBoxTarea.setChecked(tarea.isCompletada());
+        // Si la tarea está eliminada, ocultar el CheckBox
+        if (tarea.isEliminada()) {
+            holder.checkBox.setVisibility(View.GONE);  // Ocultar CheckBox
+        } else {
+            holder.checkBox.setChecked(tarea.isCompletada());
+            holder.checkBox.setVisibility(View.VISIBLE);  // Asegurarse de que el CheckBox esté visible
+        }
 
-        // Acción cuando se marca o desmarca el CheckBox
-        holder.checkBoxTarea.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            tarea.setCompletada(isChecked);
-            // Aquí puedes agregar lógica para actualizar la tarea en la base de datos
-            // tareaDataAccess.marcarTareaComoCompletada(tarea);  // Esto si tienes acceso a la base de datos
+        // Mostrar el AlertDialog al hacer clic en un item o marcar el CheckBox
+        holder.itemView.setOnClickListener(v -> mostrarDialogoConfirmacion(tarea, holder.checkBox));
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                mostrarDialogoConfirmacion(tarea, holder.checkBox);
+            }
         });
     }
 
     @Override
     public int getItemCount() {
-        return tareas.size();
+        return listaTareas.size();
     }
 
-    public static class TareaViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewNombreTarea;
-        TextView textViewCategoriaTarea;
-        TextView textViewFechaTarea;
-        CheckBox checkBoxTarea;
+    private void mostrarDialogoConfirmacion(Tarea tarea, CheckBox checkBox) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirmación");
+        builder.setMessage("¿Está seguro de que desea mover esta tarea a la papelera?");
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            moverTareaAPapelera(tarea);
+            Toast.makeText(context, "La tarea se ha movido a la papelera", Toast.LENGTH_SHORT).show(); // Mostrar el Toast
+        });
+
+        builder.setNegativeButton("No", (dialog, which) -> checkBox.setChecked(false));
+
+        builder.setOnCancelListener(dialog -> checkBox.setChecked(false));
+
+        builder.show();
+    }
+
+    private void moverTareaAPapelera(Tarea tarea) {
+        // Aquí se mueve la tarea a la papelera sin redirigir a la actividad
+        tareaDataAccess.marcarTareaComoEliminada(tarea);
+        tarea.setEliminada(true);  // Marcar la tarea como eliminada
+
+        // Eliminar la tarea de la lista y notificar al adaptador
+        listaTareas.remove(tarea);
+        notifyDataSetChanged();
+    }
+
+
+    public static class TareaViewHolder extends RecyclerView.ViewHolder {
+        CheckBox checkBox;
+        TextView textTitulo, textCategoria, textFecha;
 
         public TareaViewHolder(View itemView) {
             super(itemView);
-            textViewNombreTarea = itemView.findViewById(R.id.textViewNombreTarea);
-            textViewCategoriaTarea = itemView.findViewById(R.id.textViewCategoriaTarea);
-            textViewFechaTarea = itemView.findViewById(R.id.textViewFechaTarea);
-            checkBoxTarea = itemView.findViewById(R.id.checkBoxTarea);
+            checkBox = itemView.findViewById(R.id.checkBoxTarea);
+            textTitulo = itemView.findViewById(R.id.textViewNombreTarea);
+            textCategoria = itemView.findViewById(R.id.textViewCategoriaTarea);
+            textFecha = itemView.findViewById(R.id.textViewFechaTarea);
         }
     }
 }

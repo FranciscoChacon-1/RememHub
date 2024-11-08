@@ -29,5 +29,11 @@
     <string name="txt6">Configuración</string>
     <string name="txt7">Resumen</string>
     <string name="menu_icon">icono</string>
+    <string name="txt9">En proceso</string>
+    <string name="txtmensajee">No hay tareas para esta semana</string>
+    <string name="txtmensajes">Siguiente semana</string>
+    <string name="txtbutton">Menú</string>
+    <string name="mensaje">No hay tareas para la siguiente semana</string>
+    <string name="texto">Esta semana</string>
 
 </resources>
