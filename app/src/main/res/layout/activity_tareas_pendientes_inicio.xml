@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -64,8 +65,10 @@
         android:id="@+id/buttonMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/txtbutton"
-        android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
-        android:onClick="Dirigir" />
+        android:layout_marginTop="16dp"
+        android:onClick="Dirigir"
+        android:shadowColor="#000000"
+        android:text="@string/txtbutton"
+        android:textColorLink="#FFFFFF" />
 </LinearLayout>
