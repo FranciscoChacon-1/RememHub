@@ -29,7 +29,9 @@ android {
 }
 
 dependencies {
-
+    implementation libs.constraintlayout.v210
+    implementation libs.material.v190
+    implementation libs.cardview
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
