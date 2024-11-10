@@ -15,6 +15,9 @@ public class RememhubBD extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "rememhub.db";
     private static final int DATABASE_VERSION = 1;
+    public static final String TABLE_CATEGORIAS = "Categorias";
+    public static final String TABLE_TAREAS = "Tareas";
+
 
     // SQL statements for table creation
     private static final String CREATE_TABLE_TAREAS = "CREATE TABLE Tareas (" +
@@ -137,8 +140,5 @@ public class RememhubBD extends SQLiteOpenHelper {
         // Retornar la lista de tareas
         return tareas;
     }
-
-
-
 
 }

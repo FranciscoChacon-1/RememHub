@@ -1,10 +1,12 @@
 package sv.edu.catolica.rememhub;
 
 public class Tarea {
+    private int id;
     private String nombre;
     private String categoria;
     private String fecha;
     private boolean completada;
+    private String descripcion;
     private boolean eliminada;
 
     // Constructor
@@ -13,6 +15,15 @@ public class Tarea {
         this.categoria = categoria;
         this.fecha = fecha;
         this.completada = completada;
+    }
+
+    public Tarea() {
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.completada = completada;
+
     }
 
 
@@ -36,9 +47,6 @@ public class Tarea {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
 
     public String getFecha() {
         return fecha;
@@ -54,5 +62,21 @@ public class Tarea {
 
     public void setCompletada(boolean completada) {
         this.completada = completada;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
