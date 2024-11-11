@@ -88,5 +88,8 @@ public class tareas_pendientes_inicio extends AppCompatActivity {
         Intent intent;
         intent = new Intent(this, menu_inicio.class);
         startActivity(intent);
+
+        finish();
+
     }
 }

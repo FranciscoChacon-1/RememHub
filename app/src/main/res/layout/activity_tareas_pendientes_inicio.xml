@@ -1,13 +1,14 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
     android:orientation="vertical"
+    android:padding="16dp"
+    android:scrollbars="vertical"
     tools:context=".tareas_pendientes_inicio">
 
+    <!-- Título de la sección Esta Semana -->
     <TextView
         android:id="@+id/textViewEstaSemana"
         android:layout_width="wrap_content"
@@ -17,13 +18,15 @@
         android:textStyle="bold"
         android:paddingBottom="8dp" />
 
+    <!-- RecyclerView para las tareas de esta semana -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEstaSemana"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:scrollbars="vertical" />
 
+    <!-- Mensaje si no hay tareas para esta semana -->
     <TextView
         android:id="@+id/mensajeEstaSemana"
         android:layout_width="wrap_content"
@@ -34,6 +37,7 @@
         android:textColor="@android:color/darker_gray"
         android:layout_marginTop="8dp" />
 
+    <!-- Título de la sección Siguiente Semana -->
     <TextView
         android:id="@+id/textViewSiguienteSemana"
         android:layout_width="wrap_content"
@@ -43,14 +47,15 @@
         android:textStyle="bold"
         android:paddingBottom="8dp" />
 
+    <!-- RecyclerView para las tareas de la siguiente semana -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSiguienteSemana"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:layout_marginBottom="16dp" />
 
+    <!-- Mensaje si no hay tareas para la siguiente semana -->
     <TextView
         android:id="@+id/mensajeSiguienteSemana"
         android:layout_width="wrap_content"
@@ -61,6 +66,7 @@
         android:textColor="@android:color/darker_gray"
         android:layout_marginTop="8dp" />
 
+    <!-- Botón para ir al menú -->
     <Button
         android:id="@+id/buttonMenu"
         android:layout_width="match_parent"
@@ -71,4 +77,5 @@
         android:shadowColor="#000000"
         android:text="@string/txtbutton"
         android:textColorLink="#FFFFFF" />
+
 </LinearLayout>

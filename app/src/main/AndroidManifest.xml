@@ -2,9 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permisos -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!-- Actividad principal y otras actividades -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,63 +18,46 @@
         android:theme="@style/Theme.RememHub"
         tools:targetApi="31">
 
-        <!-- Actividades del primer archivo -->
-        <activity
-            android:name=".activity_resumen"
+        <!-- Receiver para recibir eventos de arranque y reinstalación -->
+        <receiver android:name=".ReminderReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Receiver para la notificación -->
+        <receiver android:name=".NotificationReceiver"
+            android:enabled="true"
             android:exported="false" />
-        <activity
-            android:name=".activity_historial"
-            android:exported="false" />
-        <activity
-            android:name=".activity_configuracion"
-            android:exported="false" />
-        <activity
-            android:name=".detalles_de_tarea"
-            android:exported="false" />
-        <!-- Categorias -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".menu_inicio"
-            android:exported="true">
+
+        <!-- Actividades -->
+        <activity android:name=".activity_resumen" android:exported="false" />
+        <activity android:name=".activity_historial" android:exported="false" />
+        <activity android:name=".activity_configuracion" android:exported="false" />
+        <activity android:name=".detalles_de_tarea" android:exported="false" />
+
+
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".tareas_pendientes_inicio" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".tareas_pendientes_inicio"
-            android:exported="true" />
-        <activity
-            android:name=".PapeleraActivity"
-            android:exported="false" />
-
-        <!-- Actividades adicionales del segundo archivo -->
-        <activity
-            android:name=".VerTareasxCategorias"
-            android:exported="false" />
-        <activity
-            android:name=".Añadirtarea"
-            android:exported="true"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".VerActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".EditarActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".menu_inicio" android:exported="true" />
+        <activity android:name=".PapeleraActivity" android:exported="false" />
+        <activity android:name=".VerTareasxCategorias" android:exported="false" />
+        <activity android:name=".Añadirtarea" android:exported="true" android:parentActivityName=".MainActivity" />
+        <activity android:name=".VerActivity" android:exported="false" android:parentActivityName=".MainActivity" />
+        <activity android:name=".MainActivity2" android:exported="false" android:parentActivityName=".MainActivity" />
+        <activity android:name=".EditarActivity" android:exported="false" android:parentActivityName=".MainActivity" />
 
         <!-- Meta-data para PARENT_ACTIVITY -->
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity" />
-
     </application>
 </manifest>

@@ -87,4 +87,5 @@ public class PapeleraActivity extends AppCompatActivity {
     private Tarea obtenerTareaPorNombre(String nombre) {
         return tareaDataAccess.obtenerTareaPorNombre(nombre);
     }
+
 }

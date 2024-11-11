@@ -1,15 +1,29 @@
 package sv.edu.catolica.rememhub;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Tarea {
     private int id;
     private String nombre;
     private String categoria;
-    private String fecha;
+    private String fecha;  // La fecha es un String
     private boolean completada;
     private String descripcion;
     private boolean eliminada;
+    private String diasRecordatorio;
 
-    // Constructor
+    // Constructor con días de recordatorio
+    public Tarea(String nombre, String categoria, String fecha, boolean completada, String diasRecordatorio) {
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.fecha = fecha;
+        this.completada = completada;
+        this.diasRecordatorio = diasRecordatorio;
+    }
+
+    // Constructor sin días de recordatorio
     public Tarea(String nombre, String categoria, String fecha, boolean completada) {
         this.nombre = nombre;
         this.categoria = categoria;
@@ -17,24 +31,18 @@ public class Tarea {
         this.completada = completada;
     }
 
-    public Tarea() {
-        this.nombre = nombre;
-        this.categoria = categoria;
-        this.fecha = fecha;
-        this.descripcion = descripcion;
-        this.completada = completada;
-
+    // Método para convertir la fecha de String a Date
+    public Date getFechaCumplimiento() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Asumimos el formato de fecha es "yyyy-MM-dd"
+        try {
+            return sdf.parse(fecha);  // Convierte el String a Date
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;  // En caso de error, retorna null
+        }
     }
 
-
-    public boolean isEliminada() {
-        return eliminada;
-    }
-
-    public void setEliminada(boolean eliminada) {
-        this.eliminada = eliminada;
-    }
-    // Métodos getter y setter
+    // Métodos getter y setter para los demás atributos
     public String getNombre() {
         return nombre;
     }
@@ -47,6 +55,9 @@ public class Tarea {
         return categoria;
     }
 
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
     public String getFecha() {
         return fecha;
@@ -79,4 +90,22 @@ public class Tarea {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public String getDiasRecordatorio() {
+        return diasRecordatorio;
+    }
+
+    public boolean isEliminada() {
+        return eliminada;
+    }
+
+    public void setEliminada(boolean eliminada) {
+        this.eliminada = eliminada;
+    }
+
+    public void setDiasRecordatorio(String diasRecordatorio) {
+        this.diasRecordatorio = diasRecordatorio;
+    }
+
+
 }

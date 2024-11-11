@@ -148,29 +148,34 @@
             </LinearLayout>
 
             <!-- Elemento 6 -->
+
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="24dp"
-                android:onClick="Configuracion"
-                tools:ignore="UseCompoundDrawables">
+                android:onClick="Inicio">
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_marginBottom="16dp"
                     android:contentDescription="@string/menu_icon"
-                    android:src="@drawable/configuracion" />
+                    android:src="@drawable/mision1"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/txt6"
+                    android:text="@string/txt9"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -197,31 +202,31 @@
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="24dp"
-                android:onClick="Inicio">
+                android:onClick="Configuracion"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="140dp"
                     android:layout_marginBottom="16dp"
                     android:contentDescription="@string/menu_icon"
-                    android:src="@drawable/mision1"
-                    />
+                    android:src="@drawable/configuracion" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/txt9"
+                    android:text="@string/txt6"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
             </LinearLayout>
-
         </GridLayout>
 
 

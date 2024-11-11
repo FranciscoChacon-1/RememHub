@@ -60,6 +60,17 @@
             android:text="DD, MM, YYYY"
             android:textSize="14sp"
             android:textColor="#0000FF"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp" />
+
+        <!-- Nuevo TextView para los días de recordatorio -->
+        <TextView
+            android:id="@+id/textViewDiasRecordatorio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lun, Mar, Mié"
+            android:textSize="12sp"
+            android:textColor="#FF0000"
+            android:paddingTop="4dp" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

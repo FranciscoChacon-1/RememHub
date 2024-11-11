@@ -61,18 +61,25 @@ public class DbTareas extends RememhubBD {
             try {
                 if (cursor.moveToFirst()) {
                     do {
-                        Tarea tarea = new Tarea();
-                        tarea.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id"))); // Use getColumnIndexOrThrow
-                        tarea.setNombre(cursor.getString(cursor.getColumnIndexOrThrow("titulo"))); // Use getColumnIndexOrThrow
-                        tarea.setDescripcion(cursor.getString(cursor.getColumnIndexOrThrow("descripcion")));
-                        tarea.setFecha(cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"))); // Retrieve the date
+                        String nombre = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
+                        String descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"));
+                        String fechaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"));
+                        boolean completada = cursor.getInt(cursor.getColumnIndexOrThrow("completada")) == 1; // Ajusta según tu base de datos
+                        boolean eliminada = cursor.getInt(cursor.getColumnIndexOrThrow("eliminada")) == 1; // Recuperar "eliminada" desde la base de datos
+
+                        // Crea la tarea con los parámetros requeridos
+                        Tarea tarea = new Tarea(nombre, "Categoria", fechaCumplimiento, completada); // Ajusta "Categoria" según corresponda
+                        tarea.setDescripcion(descripcion);
+                        tarea.setEliminada(eliminada); // Establece si está eliminada o no
+
                         listaTareas.add(tarea);
                     } while (cursor.moveToNext());
                 }
             } finally {
-                cursor.close(); // Ensure the cursor is closed
+                cursor.close(); // Asegúrate de cerrar el cursor
             }
         }
         return listaTareas;
     }
+
 }

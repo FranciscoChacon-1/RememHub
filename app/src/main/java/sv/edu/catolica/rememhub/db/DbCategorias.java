@@ -141,9 +141,10 @@ public class DbCategorias extends RememhubBD {
 
     }
 
-
-
-
+    public Cursor obtenerCategorias() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_CATEGORIAS, null);  // Asegúrate de que este método retorne el cursor directamente
+    }
 
 
 
