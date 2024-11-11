@@ -48,4 +48,10 @@
     <string name="todo4">TODO</string>
     <string name="todo6">TODO</string>
     <string name="menu_nuevo">Nueva Categoria</string>
+    <string name="txtFuturas">Tareas Futuras</string>
+    <string name="mensajeFuturas">No tienes tareas programadas para fechas futuras.</string>
+    <string name="txtExpiradas">Tareas Expiradas</string>
+    <string name="mensajeExpiradas">No tienes tareas expiradas.</string>
+    <string name="mensajeProximas">No hay tareas para esta semana.</string>
+    <string name="txtProximas">Tareas Próximas</string>
 </resources>

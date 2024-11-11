@@ -1,28 +1,29 @@
 package sv.edu.catolica.rememhub;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Collections;
 import java.util.List;
 
 public class tareas_pendientes_inicio extends AppCompatActivity {
 
-
-    private RecyclerView recyclerViewEstaSemana;
-    private RecyclerView recyclerViewSiguienteSemana;
-    private TareaAdapter tareaAdapterEstaSemana;
-    private TareaAdapter tareaAdapterSiguienteSemana;
-    private List<Tarea> listaTareasEstaSemana;
-    private List<Tarea> listaTareasSiguienteSemana;
+    private RecyclerView recyclerViewProximas;
+    private RecyclerView recyclerViewExpiradas;
+    private TareaAdapter tareaAdapterProximas;
+    private TareaAdapter tareaAdapterExpiradas;
+    private List<Tarea> listaTareasProximas;
+    private List<Tarea> listaTareasExpiradas;
     private RememhubBD dbHelper;
 
-    private TextView mensajeEstaSemana;
-    private TextView mensajeSiguienteSemana;
+    private TextView mensajeProximas;
+    private TextView mensajeExpiradas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,66 +31,71 @@ public class tareas_pendientes_inicio extends AppCompatActivity {
         setContentView(R.layout.activity_tareas_pendientes_inicio);
 
         // Inicializar los RecyclerViews
-        recyclerViewEstaSemana = findViewById(R.id.recyclerViewEstaSemana);
-        recyclerViewSiguienteSemana = findViewById(R.id.recyclerViewSiguienteSemana);
+        recyclerViewProximas = findViewById(R.id.recyclerViewProximas);
+        recyclerViewExpiradas = findViewById(R.id.recyclerViewExpiradas);
 
         // Configurar el LayoutManager para los RecyclerViews
-        recyclerViewEstaSemana.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewSiguienteSemana.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewProximas.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewExpiradas.setLayoutManager(new LinearLayoutManager(this));
 
         // Inicializar los TextViews para los mensajes
-        mensajeEstaSemana = findViewById(R.id.mensajeEstaSemana);
-        mensajeSiguienteSemana = findViewById(R.id.mensajeSiguienteSemana);
+        mensajeProximas = findViewById(R.id.mensajeProximas);
+        mensajeExpiradas = findViewById(R.id.mensajeExpiradas);
 
         // Inicializar el acceso a la base de datos
         dbHelper = new RememhubBD(this);
 
-        // Obtener las tareas de la base de datos
-        TareaDataAccess tareaDataAccess = new TareaDataAccess(this);
+        // Ejecutar la carga de datos en segundo plano
+        new CargarTareasAsync().execute();
+    }
 
-        // Cargar tareas para esta semana y la siguiente semana
-        listaTareasEstaSemana = tareaDataAccess.obtenerTareasSemana(true);  // Tareas de esta semana
-        listaTareasSiguienteSemana = tareaDataAccess.obtenerTareasSemana(false);  // Tareas de la siguiente semana
+    // Clase AsyncTask para cargar las tareas en segundo plano
+    private class CargarTareasAsync extends AsyncTask<Void, Void, Void> {
 
-        // Actualizar las vistas después de cargar las tareas
-        actualizarVistas();
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // Obtener las tareas de la base de datos en segundo plano
+            TareaDataAccess tareaDataAccess = new TareaDataAccess(tareas_pendientes_inicio.this);
+            listaTareasProximas = Collections.unmodifiableList(tareaDataAccess.obtenerTareasSemana());  // Tareas próximas
+            listaTareasExpiradas = tareaDataAccess.obtenerTareasExpiradas();  // Tareas expiradas
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            // Actualizar las vistas después de cargar las tareas
+            actualizarVistas();
+        }
     }
 
     // Método para actualizar las vistas de los RecyclerView y los mensajes
     private void actualizarVistas() {
-        // Comprobar si hay tareas para esta semana
-        if (!listaTareasEstaSemana.isEmpty()) {
-            tareaAdapterEstaSemana = new TareaAdapter(this, listaTareasEstaSemana);
-            recyclerViewEstaSemana.setAdapter(tareaAdapterEstaSemana);
-            recyclerViewEstaSemana.setVisibility(View.VISIBLE);
-            mensajeEstaSemana.setVisibility(View.GONE);  // Ocultar mensaje si hay tareas
-        } else {
-            mensajeEstaSemana.setVisibility(View.VISIBLE);  // Mostrar mensaje si no hay tareas
-            mensajeEstaSemana.setText("No hay tareas para esta semana.");
-            recyclerViewEstaSemana.setVisibility(View.GONE);  // Ocultar RecyclerView si no hay tareas
-        }
+        // Actualizar todas las vistas con un solo método
+        actualizarVista(recyclerViewProximas, mensajeProximas, listaTareasProximas, getString(R.string.mensajeProximas));
+        actualizarVista(recyclerViewExpiradas, mensajeExpiradas, listaTareasExpiradas, getString(R.string.mensajeExpiradas));
+    }
 
-        // Comprobar si hay tareas para la siguiente semana
-        if (!listaTareasSiguienteSemana.isEmpty()) {
-            tareaAdapterSiguienteSemana = new TareaAdapter(this, listaTareasSiguienteSemana);
-            recyclerViewSiguienteSemana.setAdapter(tareaAdapterSiguienteSemana);
-            recyclerViewSiguienteSemana.setVisibility(View.VISIBLE);
-            mensajeSiguienteSemana.setVisibility(View.GONE);  // Ocultar mensaje si hay tareas
+    // Método general para actualizar las vistas de cada RecyclerView
+    private void actualizarVista(RecyclerView recyclerView, TextView mensaje, List<Tarea> listaTareas, String mensajeVacio) {
+        if (listaTareas != null && !listaTareas.isEmpty()) {
+            // Si hay tareas, se asigna el adaptador y se muestra el RecyclerView
+            recyclerView.setAdapter(new TareaAdapter(this, listaTareas));
+            recyclerView.setVisibility(View.VISIBLE);
+            mensaje.setVisibility(View.GONE);
         } else {
-            mensajeSiguienteSemana.setVisibility(View.VISIBLE);  // Mostrar mensaje si no hay tareas
-            mensajeSiguienteSemana.setText("No hay tareas para la siguiente semana.");
-            recyclerViewSiguienteSemana.setVisibility(View.GONE);  // Ocultar RecyclerView si no hay tareas
+            // Si no hay tareas, se muestra el mensaje de vacío
+            mensaje.setVisibility(View.VISIBLE);
+            mensaje.setText(mensajeVacio);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 
 
+
     // Método para dirigir al usuario al menú de inicio
     public void Dirigir(View view) {
-        Intent intent;
-        intent = new Intent(this, menu_inicio.class);
+        Intent intent = new Intent(this, menu_inicio.class);
         startActivity(intent);
-
         finish();
-
     }
 }

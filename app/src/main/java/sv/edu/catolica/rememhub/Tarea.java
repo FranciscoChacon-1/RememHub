@@ -33,7 +33,7 @@ public class Tarea {
 
     // Método para convertir la fecha de String a Date
     public Date getFechaCumplimiento() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Asumimos el formato de fecha es "yyyy-MM-dd"
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return sdf.parse(fecha);  // Convierte el String a Date
         } catch (ParseException e) {

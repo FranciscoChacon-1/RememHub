@@ -1,7 +1,6 @@
 package sv.edu.catolica.rememhub;
 
 import android.content.Context;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -18,7 +17,7 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
     private List<Tarea> listaTareas;
     private TareaDataAccess tareaDataAccess;
 
-    public void TareaAdapterPapelera(Context context, List<Tarea> listaTareas) {
+    public TareaPapeleraAdapter(Context context, List<Tarea> listaTareas) {
         this.context = context;
         this.listaTareas = listaTareas;
         this.tareaDataAccess = new TareaDataAccess(context);
@@ -37,8 +36,8 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
         holder.textCategoria.setText(tarea.getCategoria());
         holder.textFecha.setText(tarea.getFecha());
 
-
-
+        // Configurar el clic para mostrar el diálogo de eliminar permanentemente
+        holder.itemView.setOnClickListener(v -> mostrarDialogoEliminar(tarea));
     }
 
     @Override
@@ -48,23 +47,36 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
 
 
 
-    private void moverTareaAPapelera(Tarea tarea) {
-        // Aquí se mueve la tarea a la papelera sin redirigir a la actividad
-        tareaDataAccess.marcarTareaComoEliminada(tarea); // Marcar la tarea como eliminada en la base de datos
+    private void mostrarDialogoEliminar(Tarea tarea) {
+        // Crear el diálogo con la opción para eliminar permanentemente
+        new AlertDialog.Builder(context)
+                .setTitle("Eliminar tarea")
+                .setMessage("¿Estás seguro de que deseas eliminar esta tarea permanentemente?")
+                .setPositiveButton("Eliminar permanentemente", (dialog, which) -> {
+                    eliminarTareaPermanente(tarea); // Eliminar la tarea permanentemente
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void eliminarTareaPermanente(Tarea tarea) {
+        // Eliminar la tarea de la base de datos permanentemente
+        tareaDataAccess.eliminarTarea(tarea);
         listaTareas.remove(tarea); // Eliminarla de la lista visual
-        notifyDataSetChanged(); // Notificar que la lista ha cambiado para actualizar la interfaz
+        notifyDataSetChanged(); // Notificar que la lista ha cambiado
+        Toast.makeText(context, "Tarea eliminada permanentemente", Toast.LENGTH_SHORT).show(); // Confirmación
     }
 
     // Método para vaciar la papelera (se llama desde la actividad)
     public void vaciarPapelera() {
         for (Tarea tarea : listaTareas) {
-            tareaDataAccess.eliminarTarea(tarea); // Eliminar tarea de la base de datos
+            tareaDataAccess.eliminarTarea(tarea); // Eliminar tarea permanentemente de la base de datos
         }
 
         listaTareas.clear(); // Limpiar la lista de tareas de la papelera
         notifyDataSetChanged(); // Notificar el cambio en la interfaz
 
-        Toast.makeText(context, "Papelera vacía", Toast.LENGTH_SHORT).show(); // Mostrar el mensaje de confirmación
+        Toast.makeText(context, "Papelera vacía", Toast.LENGTH_SHORT).show(); // Confirmación
     }
 
     public static class TareaViewHolder extends RecyclerView.ViewHolder {
@@ -78,4 +90,3 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
         }
     }
 }
-

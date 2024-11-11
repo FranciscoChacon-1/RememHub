@@ -304,20 +304,18 @@ public class Añadirtarea extends AppCompatActivity {
     }
 
     private void showDatePickerDialog() {
-        // Get the current date
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Create a DatePickerDialog
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Update the EditText with the selected date
-                    et1.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
-                }, year, month, day);
-
-        // Show the DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                //(view, year1, month1, dayOfMonth) -> tvFecha.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1),
+                (view, year1, month1, dayOfMonth) -> et1.setText(year1 + "-" + (month1 + 1) + "-" + dayOfMonth),
+                //'2024-10-03'
+                year, month, day
+        );
         datePickerDialog.show();
     }
 

@@ -162,20 +162,43 @@ public class detalles_de_tarea extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String titulo = etTituloTarea.getText().toString();
         String descripcion = etDescripcion.getText().toString();
-        int categoriaId = spCategoria.getSelectedItemPosition() + 1;
+        int categoriaId = spCategoria.getSelectedItemPosition() + 1; // Se ajusta el índice
         String fecha = tvFecha.getText().toString();
         String hora = tvHora.getText().toString();
         int estado = checkBoxCompletada.isChecked() ? 1 : 0;
 
-        db.execSQL("UPDATE Tareas SET titulo = ?, descripcion = ?, categoria_id = ?, fecha_cumplimiento = ?, hora_cumplimiento = ?, estado = ? WHERE id = ?",
-                new Object[]{titulo, descripcion, categoriaId, fecha, hora, estado, selectedTareaId});
-        Toast.makeText(this, "Tarea actualizada correctamente", Toast.LENGTH_SHORT).show();
+        // Verifica si la tarea tiene un ID válido y actualiza
+        if (selectedTareaId != -1) {
+            // Update the task in the database
+            db.execSQL("UPDATE Tareas SET titulo = ?, descripcion = ?, categoria_id = ?, fecha_cumplimiento = ?, hora_cumplimiento = ?, estado = ? WHERE id = ?",
+                    new Object[]{titulo, descripcion, categoriaId, fecha, hora, estado, selectedTareaId});
+            Toast.makeText(this, "Tarea actualizada correctamente", Toast.LENGTH_SHORT).show();
+            cargarTareas(); // Recargar tareas para reflejar cambios
+        } else {
+            Toast.makeText(this, "No se ha seleccionado una tarea válida", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
+
 
     private void eliminarTarea() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM Tareas WHERE id = ?", new Object[]{selectedTareaId});
-        Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show();
-        cargarTareas(); // Recargar tareas para actualizar la lista
+        if (selectedTareaId != -1) {
+            db.execSQL("DELETE FROM Tareas WHERE id = ?", new Object[]{selectedTareaId});
+            Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show();
+            cargarTareas(); // Recargar tareas para actualizar la lista
+
+            // Limpiar los campos de la UI
+            etTituloTarea.setText("");
+            etDescripcion.setText("");
+            tvFecha.setText("");
+            tvHora.setText("");
+            checkBoxCompletada.setChecked(false);
+            spCategoria.setSelection(0); // Reestablecer la categoría a la primera opción
+        } else {
+            Toast.makeText(this, "No se ha seleccionado una tarea válida", Toast.LENGTH_SHORT).show();
+        }
     }
+
 }

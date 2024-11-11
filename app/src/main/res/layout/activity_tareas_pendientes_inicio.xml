@@ -1,81 +1,85 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:scrollbars="vertical"
-    tools:context=".tareas_pendientes_inicio">
+    android:padding="16dp">
 
-    <!-- Título de la sección Esta Semana -->
-    <TextView
-        android:id="@+id/textViewEstaSemana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/texto"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
-
-    <!-- RecyclerView para las tareas de esta semana -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewEstaSemana"
+    <!-- Contenido desplazable -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/buttonMenu">
 
-    <!-- Mensaje si no hay tareas para esta semana -->
-    <TextView
-        android:id="@+id/mensajeEstaSemana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/txtmensajee"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="8dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <!-- Título de la sección Siguiente Semana -->
-    <TextView
-        android:id="@+id/textViewSiguienteSemana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txtmensajes"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
+            <!-- Tareas Próximas -->
+            <TextView
+                android:id="@+id/textViewProximas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txtProximas"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp" />
 
-    <!-- RecyclerView para las tareas de la siguiente semana -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewSiguienteSemana"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_marginBottom="16dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewProximas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:layout_marginBottom="16dp" />
 
-    <!-- Mensaje si no hay tareas para la siguiente semana -->
-    <TextView
-        android:id="@+id/mensajeSiguienteSemana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/mensaje"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="8dp" />
+            <TextView
+                android:id="@+id/mensajeProximas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/mensajeProximas"
+                android:textSize="16sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="8dp" />
 
-    <!-- Botón para ir al menú -->
+            <!-- Tareas Expiradas -->
+            <TextView
+                android:id="@+id/textViewExpiradas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txtExpiradas"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewExpiradas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/mensajeExpiradas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/mensajeExpiradas"
+                android:textSize="16sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Botón de Menú (fijo en la parte inferior) -->
     <Button
         android:id="@+id/buttonMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="16dp"
         android:onClick="Dirigir"
         android:shadowColor="#000000"
         android:text="@string/txtbutton"
-        android:textColorLink="#FFFFFF" />
-
-</LinearLayout>
+        android:textColor="#FFFFFF" />
+</RelativeLayout>

@@ -84,11 +84,13 @@ public class RememhubBD extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Categorias (nombre) VALUES ('Ejercicio');");
         db.execSQL("INSERT INTO Categorias (nombre) VALUES ('Compras');");
 
-        // Insertar ejemplos en Tareas
+// Insertar ejemplos en Tareas
         db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
-                "VALUES ('Estudiar para examen', 'Revisar los capítulos 1 a 5', 1, '2024-10-01', '2024-10-03', '10:00', '09:00', 0);");
+                "VALUES ('Estudiar para examen', 'Revisar los capítulos 1 a 5', 1, '2024-10-10', '2024-11-15', '10:00', '09:00', 0);");
         db.execSQL("INSERT INTO Tareas (titulo, descripcion, categoria_id, fecha_creacion, fecha_cumplimiento, hora_cumplimiento, hora_recordatorio, estado) " +
-                "VALUES ('Comprar comestibles', 'Ir al supermercado', 4, '2024-10-01', '2024-10-05', '17:00', '16:00', 0);");
+                "VALUES ('Comprar comestibles', 'Ir al supermercado', 4, '2024-10-10', '2024-11-03', '17:00', '16:00', 0);");
+
+
     }
 
     @Override
