@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="40dp"
-    >
+    android:padding="16dp">
 
     <!-- Barra de búsqueda y selector de fecha -->
     <LinearLayout
@@ -12,39 +11,35 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:background="@android:color/white">
 
         <EditText
             android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:autofillHints="Buscar"
-            android:hint="@string/buscar"
-            android:textColor="@color/black"
+            android:hint="Buscar"
+            android:textColor="@android:color/black"
             android:drawableStart="@android:drawable/ic_menu_search"
             android:padding="8dp"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:inputType="text" />
 
         <Button
             android:id="@+id/dateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fecha"
+            android:text="Fecha"
             android:drawableEnd="@android:drawable/ic_menu_today"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
-    <!-- Contenedor para tareas dinámicas -->
-    <LinearLayout
-        android:id="@+id/taskContainer"
+    <!-- RecyclerView para la lista de tareas -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewHistorial"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:padding="8dp">
-    </LinearLayout>
-
+        android:layout_height="0dp"
+        android:layout_weight="1" /> <!-- Esto asegura que el RecyclerView ocupe el espacio restante -->
 
 </LinearLayout>

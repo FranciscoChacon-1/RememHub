@@ -14,11 +14,13 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import java.util.ArrayList;
+import android.util.Log;
 
 public class activity_resumen extends AppCompatActivity {
     private PieChart pieChartAllTasks;
     private PieChart pieChartByCategory;
     private Spinner catSpinner;
+    private static final String TAG = "activity_resumenn"; // Definir el TAG para los logs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,37 +71,57 @@ public class activity_resumen extends AppCompatActivity {
         catSpinner.setAdapter(adapter);
     }
 
-    private void actualizarCategorias(String categoria)
-    {
+    private void actualizarCategorias(String categoria) {
         RememhubBD dbHelper = new RememhubBD(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         int completada = 0;
         int incompleta = 0;
 
+        // Log para verificar la categoría seleccionada
+        Log.d(TAG, "Categoría seleccionada: " + categoria);
+
         Cursor cursor = db.rawQuery("SELECT id FROM Categorias WHERE nombre = ?", new String[]{categoria});
         if (cursor.moveToFirst()) {
             int categoryId = cursor.getInt(0);
+            Log.d(TAG, "ID de la categoría: " + categoryId); // Log para verificar el ID de la categoría
 
-            // Contar tareas completadas e incompletas
-            Cursor taskCursor = db.rawQuery("SELECT estado, COUNT(*) FROM Tareas WHERE categoria_id = ? GROUP BY estado", new String[]{ String.valueOf(categoryId) });
-            while (taskCursor.moveToNext()) {
-                int estado = taskCursor.getInt(0);
-                int cuenta = taskCursor.getInt(1);
-                if (estado == 1) {
-                    completada = cuenta;
-                } else {
-                    incompleta = cuenta;
+            // Contar tareas completadas e incompletas para la categoría seleccionada
+            Cursor taskCursor = db.rawQuery(
+                    "SELECT estado, COUNT(*) FROM Tareas WHERE categoria_id = ? GROUP BY estado",
+                    new String[]{String.valueOf(categoryId)}
+            );
+
+            if (taskCursor != null && taskCursor.getCount() > 0) {
+                while (taskCursor.moveToNext()) {
+                    int estado = taskCursor.getInt(0);
+                    int cuenta = taskCursor.getInt(1);
+
+                    // Log para verificar los valores de estado y cuenta de tareas
+                    Log.d(TAG, "Estado: " + estado + ", Cuenta: " + cuenta);
+
+                    if (estado == 1) {
+                        completada += cuenta; // Sumar tareas completadas
+                    } else if (estado == 0) {
+                        incompleta += cuenta; // Sumar tareas incompletas
+                    }
                 }
             }
             taskCursor.close();
+        } else {
+            Log.d(TAG, "No se encontró la categoría: " + categoria); // Log si no se encuentra la categoría
         }
         cursor.close();
         db.close();
 
+        // Log para verificar el conteo final de tareas completadas e incompletas
+        Log.d(TAG, "Tareas completadas: " + completada + ", Tareas incompletas: " + incompleta);
+
         // Actualizar gráfico con los datos obtenidos
         setupPieChart(pieChartByCategory, completada, incompleta);
     }
+
+
 
     private void setupPieChart(PieChart pieChart, int completed, int incomplete) {
         ArrayList<PieEntry> entries = new ArrayList<>();

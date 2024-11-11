@@ -35,18 +35,34 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
     @Override
     public void onBindViewHolder(TareaViewHolder holder, int position) {
         Tarea tarea = listaTareas.get(position);
+
+        // Configurar los datos de la tarea en la interfaz
         holder.textTitulo.setText(tarea.getNombre());
-        holder.textCategoria.setText(tarea.getCategoria());
+
+        // Mostrar el nombre de la categoría de la tarea
+        if (tarea.getCategoria() != null && !tarea.getCategoria().isEmpty()) {
+            holder.textCategoria.setText(tarea.getCategoria());
+        } else {
+            holder.textCategoria.setText("Sin categoría"); // Texto por defecto si la categoría está vacía
+        }
+
+        // Mostrar la fecha de la tarea
         holder.textFecha.setText(tarea.getFecha());
+
+        // Mostrar los días de recordatorio de la tarea
         holder.textDiasRecordatorio.setText(tarea.getDiasRecordatorio());
 
+        // Mostrar el estado de completado
+        holder.checkBox.setChecked(tarea.isCompletada());
+
+        // Si la tarea está eliminada, ocultar el CheckBox; si no, mostrarlo y configurar su estado
         if (tarea.isEliminada()) {
             holder.checkBox.setVisibility(View.GONE);
         } else {
-            holder.checkBox.setChecked(tarea.isCompletada());
             holder.checkBox.setVisibility(View.VISIBLE);
         }
 
+        // Configurar el listener para el CheckBox
         holder.checkBox.setOnClickListener(v -> {
             if (!tarea.isEliminada()) {
                 mostrarDialogoConfirmacion(tarea, holder.checkBox, position);
@@ -72,7 +88,6 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
     @SuppressLint("StaticFieldLeak")
     private void moverTareaAPapelera(final Tarea tarea, final int position) {
         new AsyncTask<Void, Void, Void>() {
-            @SuppressLint("StaticFieldLeak")
             @Override
             protected Void doInBackground(Void... voids) {
                 tareaDataAccess.marcarTareaComoEliminada(tarea);
@@ -80,7 +95,6 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
                 return null;
             }
 
-            @SuppressLint("StaticFieldLeak")
             @Override
             protected void onPostExecute(Void aVoid) {
                 listaTareas.remove(position);
@@ -89,7 +103,6 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             }
         }.execute();
     }
-
 
     @Override
     public int getItemCount() {
@@ -108,5 +121,12 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             textFecha = itemView.findViewById(R.id.textViewFechaTarea);
             textDiasRecordatorio = itemView.findViewById(R.id.textViewDiasRecordatorio);
         }
+    }
+
+    // Método para actualizar la lista de tareas en el adaptador
+    public void updateData(List<Tarea> newTasks) {
+        listaTareas.clear();
+        listaTareas.addAll(newTasks);
+        notifyDataSetChanged();
     }
 }

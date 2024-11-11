@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.app.AlarmManager;
@@ -29,22 +30,22 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import android.util.Log;
-
+import java.util.Locale;
 
 import sv.edu.catolica.rememhub.db.DbCategorias;
 import sv.edu.catolica.rememhub.db.DbTareas;
 
-
-
 public class Añadirtarea extends AppCompatActivity {
     EditText et1, et2, et3, txtTitulo, txtDescripcion;
     Spinner SpCategorias, spDia;
-    private String[] opciones = {"No repetir", "Cada día", "Cada día (Lun - Vie)", "Cada día (Sáb - Dom)", "Otro..."};
+    private String[] opciones = {"Cada día", "Cada día (Lun - Vie)", "Cada día (Sáb - Dom)", "Otro..."};
+    private List<String> diasPersonalizados = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,7 @@ public class Añadirtarea extends AppCompatActivity {
         Button btnCancelar = findViewById(R.id.btncancelar);
         Button btnGuardar = findViewById(R.id.btnguardar);
 
-        List<Categorias> listCat = llenarCategorias(); // Lista de objetos Categorias
+        List<Categorias> listCat = llenarCategorias();
         ArrayAdapter<Categorias> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listCat);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SpCategorias.setAdapter(arrayAdapter);
@@ -73,8 +74,12 @@ public class Añadirtarea extends AppCompatActivity {
         spDia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Si se selecciona "Otro...", mostramos el diálogo
                 if (opciones[position].equals("Otro...")) {
                     mostrarDialogoDias();
+                } else {
+                    diasPersonalizados.clear();  // Limpiar los días seleccionados si no es "Otro..."
+                    actualizarTextoSpinner();    // Actualizar el texto del spinner
                 }
             }
 
@@ -107,7 +112,7 @@ public class Añadirtarea extends AppCompatActivity {
             } catch (IllegalArgumentException e) {
                 Log.e("DbError", "Error: " + e.getMessage());
             } finally {
-                cursor.close(); // Asegúrate de cerrar el cursor
+                cursor.close();
             }
         }
         dbCategorias.close();
@@ -117,6 +122,22 @@ public class Añadirtarea extends AppCompatActivity {
     public void Cancelar(View view) {
         clearFields();
     }
+
+    // Método para actualizar el texto del spinner
+    private void actualizarTextoSpinner() {
+        // Si se selecciona "Otro..." y hay días personalizados, actualizamos el texto
+        if (!diasPersonalizados.isEmpty() && spDia.getSelectedItem().equals("Otro...")) {
+            String textoSpinner = String.join(", ", diasPersonalizados); // Texto personalizado
+
+            // Actualizar el texto en la vista actual del spinner sin recrear el adaptador
+            View v = spDia.getSelectedView();
+            if (v instanceof TextView) {
+                ((TextView) v).setText(textoSpinner);
+            }
+        }
+    }
+
+
 
     public void mostrarHorario(View view) {
         int hora = 0, minuto = 0;
@@ -128,12 +149,7 @@ public class Añadirtarea extends AppCompatActivity {
         }
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(Añadirtarea.this,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        et2.setText(String.format("%02d:%02d", hourOfDay, minute));  // Mostrar la hora seleccionada en el EditText
-                    }
-                }, hora, minuto, true);
+                (view1, hourOfDay, minute) -> et2.setText(String.format("%02d:%02d", hourOfDay, minute)), hora, minuto, true);
 
         timePickerDialog.show();
     }
@@ -141,18 +157,40 @@ public class Añadirtarea extends AppCompatActivity {
     private void mostrarDialogoDias() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecciona los días personalizados");
-        builder.setItems(new String[]{"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"},
-                (dialog, which) -> {
-                    // Acciones al seleccionar un día
-                });
-        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        String[] dias = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+        boolean[] seleccionados = new boolean[dias.length];
+
+        // Inicializamos el estado de selección según los días previamente seleccionados
+        for (int i = 0; i < dias.length; i++) {
+            seleccionados[i] = diasPersonalizados.contains(dias[i]);
+        }
+
+        builder.setMultiChoiceItems(dias, seleccionados, (dialog, which, isChecked) -> {
+            if (isChecked) {
+                diasPersonalizados.add(dias[which]);
+            } else {
+                diasPersonalizados.remove(dias[which]);
+            }
+        });
+
+        builder.setPositiveButton("OK", (dialog, id) -> {
+            dialog.dismiss();
+
+            // Actualizar el texto del spinner con los días seleccionados
+            if (diasPersonalizados.isEmpty()) {
+                spDia.setSelection(0);  // "Cada día" o cualquier otro valor por defecto
+            } else {
+                String diasTexto = String.join(", ", diasPersonalizados);
+                spDia.setSelection(opciones.length - 1);  // Para "Otro..."
+                ((TextView) spDia.getSelectedView()).setText(diasTexto);
+            }
+        });
         builder.show();
     }
 
 
     public void Guardar(View view) {
         try {
-            // Verificar y solicitar permisos necesarios
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
@@ -168,67 +206,66 @@ public class Añadirtarea extends AppCompatActivity {
                 }
             }
 
-            // Guardar tarea
             DbTareas dbTareas = new DbTareas(Añadirtarea.this);
             Categorias categoriaSeleccionada = (Categorias) SpCategorias.getSelectedItem();
             int categoriaId = categoriaSeleccionada != null ? categoriaSeleccionada.getId() : -1;
 
             String titulo = txtTitulo.getText().toString();
             String descripcion = txtDescripcion.getText().toString();
+            String fechaCreacion = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
             String fechaCumplimiento = et1.getText().toString();
             String horaCumplimiento = et2.getText().toString();
             String horaRecordatorio = et3.getText().toString();
 
+            // Validación de campos
             if (titulo.isEmpty() || descripcion.isEmpty() || fechaCumplimiento.isEmpty() || horaCumplimiento.isEmpty() || horaRecordatorio.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Validar formato de hora
             if (!horaCumplimiento.matches("^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$") || !horaRecordatorio.matches("^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$")) {
                 Toast.makeText(this, "Por favor, ingresa una hora válida en formato HH:mm", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            long id = dbTareas.insertarTarea(titulo, descripcion, categoriaId, fechaCumplimiento, horaCumplimiento, horaRecordatorio);
+            // Insertar tarea
+            long id = dbTareas.insertarTarea(titulo, descripcion, categoriaId, fechaCreacion, fechaCumplimiento, horaCumplimiento, horaRecordatorio);
+
             if (id > 0) {
                 Toast.makeText(Añadirtarea.this, "Tarea guardada con ID: " + id, Toast.LENGTH_SHORT).show();
                 clearFields();
 
-                // Preparar parámetros para la notificación
-                String[] horaArray = horaRecordatorio.split(":");
-                int hora = Integer.parseInt(horaArray[0]);
-                int minuto = Integer.parseInt(horaArray[1]);
-
-                // Determinar si la tarea se repite, y en qué días
+                // Determinar los días de recordatorio
                 String selectedOption = (String) spDia.getSelectedItem();
                 List<String> diasRecordatorio = new ArrayList<>();
 
-                switch (selectedOption) {
-                    case "Cada día":
-                        diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-                        break;
-                    case "Cada día (Lun - Vie)":
-                        diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes");
-                        break;
-                    case "Cada día (Sáb - Dom)":
-                        diasRecordatorio = Arrays.asList("Sábado", "Domingo");
-                        break;
-                    case "No repetir":
-                        diasRecordatorio = new ArrayList<>(); // Lista vacía
-                        break;
-                    default:
-                        Toast.makeText(this, "Opción de repetición no reconocida", Toast.LENGTH_SHORT).show();
-                        return;
+                if (selectedOption.equals("Otro...")) {
+                    diasRecordatorio = new ArrayList<>(diasPersonalizados);
+                } else {
+                    switch (selectedOption) {
+                        case "Cada día":
+                            diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+                            break;
+                        case "Cada día (Lun - Vie)":
+                            diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes");
+                            break;
+                        case "Cada día (Sáb - Dom)":
+                            diasRecordatorio = Arrays.asList("Sábado", "Domingo");
+                            break;
+                        default:
+                            diasRecordatorio = new ArrayList<>();
+                            break;
+                    }
                 }
 
                 // Insertar los días en la base de datos
                 for (String dia : diasRecordatorio) {
-                    dbTareas.insertarDiaRecordatorio((int) id, dia); // Aquí asumo que tienes un método para insertar los días en la base de datos
+                    dbTareas.insertarDiaRecordatorio((int) id, dia); // Insertar cada día individualmente
                 }
 
-                // Programar la notificación con la lista de días
-                programarNotificacion(titulo, descripcion, diasRecordatorio, hora, minuto);
+
+                // Programar la notificación
+                programarNotificacion(titulo, descripcion, diasRecordatorio, Integer.parseInt(horaRecordatorio.split(":")[0]), Integer.parseInt(horaRecordatorio.split(":")[1]));
             }
 
         } catch (Exception e) {

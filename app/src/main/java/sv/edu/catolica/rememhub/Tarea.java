@@ -31,6 +31,21 @@ public class Tarea {
         this.completada = completada;
     }
 
+    // Para el historial
+    public Tarea(int id, String nombre, String categoria, String fecha) {
+        this.id = id;
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.fecha = fecha;
+        this.completada = false;  // Valor predeterminado, o puedes dejarlo a tu criterio
+        this.eliminada = false;   // Valor predeterminado
+        this.diasRecordatorio = "";  // Valor predeterminado
+    }
+
+
+    public Tarea(int id, String nombre, String categoria, String fecha, String fechaCumplimiento, String horaCumplimiento, String horaRecordatorio) {
+    }
+
     // Método para convertir la fecha de String a Date
     public Date getFechaCumplimiento() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
