@@ -1,5 +1,6 @@
 package sv.edu.catolica.rememhub.db;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -24,94 +25,66 @@ public class DbTareas extends RememhubBD {
         super(context);
     }
 
-    public long insertarTarea(String titulo, String descripcion, int categoriaId, String fechaCreacion, String fechaCumplimiento, String horaCumplimiento, String horaRecordatorio) {
+    public long insertarTarea(String titulo, String descripcion, String fechaCreacion, String fechaCumplimiento, String horaCumplimiento, String horaRecordatorio, int categoriaId) {
         long id = 0;
-        SQLiteDatabase db = null;
+        SQLiteDatabase db = this.getWritableDatabase();
         try {
-            db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
-
-            // Insertamos los valores de la tarea
             values.put("titulo", titulo);
             values.put("descripcion", descripcion);
-            values.put("categoria_id", categoriaId);
+            values.put("categoria_id", categoriaId);  // Ahora toma en cuenta categoriaId
             values.put("fecha_cumplimiento", fechaCumplimiento);
             values.put("hora_cumplimiento", horaCumplimiento);
             values.put("hora_recordatorio", horaRecordatorio);
-            values.put("fecha_creacion", fechaCreacion);  // Esto es el campo donde insertas la fecha de creación.
+            values.put("fecha_creacion", fechaCreacion);
 
-            Log.d("DbTareas", "Inserting task: " + values.toString());
-
-            // Insertamos la tarea
             id = db.insert(TABLE_TAREAS, null, values);
-            if (id == -1) {
-                Log.e("DbTareas", "Error inserting task: Insertion failed");
-            }
         } catch (Exception ex) {
             Log.e("DbTareas", "Error inserting task: " + ex.getMessage());
-            ex.printStackTrace();
         } finally {
-            if (db != null && db.isOpen()) {
-                db.close();
-            }
+            db.close();
         }
         return id;
     }
 
+
+    public void insertarDiaRecordatorio(int tareaId, String dia) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put("tarea_id", tareaId);
+            values.put("dia", dia);
+
+            db.insert("DiasRecordatorio", null, values);
+        } catch (Exception ex) {
+            Log.e("DbTareas", "Error inserting reminder day: " + ex.getMessage());
+        } finally {
+            db.close();
+        }
+    }
+
+    @SuppressLint("Range")
     public List<Tarea> obtenerTareasPorCategoria(int categoriaId) {
-        List<Tarea> listaTareas = new ArrayList<>();
+        List<Tarea> tareas = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-
-        // Ajuste: Asegúrate de consultar solo desde la tabla Tareas
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TAREAS +
-                        " WHERE categoria_id = ? AND estado = 0", // estado 0 para tareas activas, ajusta según corresponda
-                new String[]{String.valueOf(categoriaId)});
-
+        Cursor cursor = db.query(TABLE_TAREAS, null, "categoria_id=?", new String[]{String.valueOf(categoriaId)}, null, null, null);
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
                     do {
-                        String nombre = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
-                        String descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"));
-                        String fechaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"));
-                        boolean completada = cursor.getInt(cursor.getColumnIndexOrThrow("estado")) == 1;
-
-                        // Crear tarea y agregarla a la lista
-                        Tarea tarea = new Tarea(nombre, "Categoria", fechaCumplimiento, completada);
-                        tarea.setDescripcion(descripcion);
-                        listaTareas.add(tarea);
+                        Tarea tarea = new Tarea();
+                        tarea.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                        tarea.setTitulo(cursor.getString(cursor.getColumnIndex("titulo")));
+                        tarea.setDescripcion(cursor.getString(cursor.getColumnIndex("descripcion")));
+                        tarea.setFechaCumplimiento(cursor.getString(cursor.getColumnIndex("fecha_cumplimiento")));
+                        tareas.add(tarea);
                     } while (cursor.moveToNext());
                 }
             } finally {
                 cursor.close();
             }
         }
-        return listaTareas;
+        db.close();
+        return tareas;
     }
-
-
-    public void eliminarDiasRecordatorio(int tareaId) {
-        SQLiteDatabase db = null;
-        try {
-            db = this.getWritableDatabase();
-
-            // Eliminar los días de recordatorio asociados a la tarea
-            int rowsDeleted = db.delete("DiasRecordatorio", "tarea_id = ?", new String[]{String.valueOf(tareaId)});
-
-            if (rowsDeleted > 0) {
-                Log.d("DbTareas", "Días de recordatorio eliminados correctamente para la tarea con ID: " + tareaId);
-            } else {
-                Log.d("DbTareas", "No se encontraron días de recordatorio para la tarea con ID: " + tareaId);
-            }
-        } catch (Exception ex) {
-            Log.e("DbTareas", "Error al eliminar los días de recordatorio: " + ex.getMessage());
-            ex.printStackTrace();
-        } finally {
-            if (db != null && db.isOpen()) {
-                db.close();
-            }
-        }
-    }
-
-
 }

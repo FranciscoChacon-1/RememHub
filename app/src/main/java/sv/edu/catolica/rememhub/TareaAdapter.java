@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,41 +36,19 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
     @Override
     public void onBindViewHolder(TareaViewHolder holder, int position) {
         Tarea tarea = listaTareas.get(position);
-
-        // Configurar los datos de la tarea en la interfaz
-        holder.textTitulo.setText(tarea.getNombre());
-
-        // Mostrar el nombre de la categoría de la tarea
-        if (tarea.getCategoria() != null && !tarea.getCategoria().isEmpty()) {
-            holder.textCategoria.setText(tarea.getCategoria());
-        } else {
-            holder.textCategoria.setText("Sin categoría"); // Texto por defecto si la categoría está vacía
-        }
-
-        // Mostrar la fecha de la tarea
+        holder.textTitulo.setText(tarea.getTitulo());
+        holder.textCategoria.setText(tarea.getCategoria() != null ? tarea.getCategoria() : "Sin categoría");
         holder.textFecha.setText(tarea.getFecha());
+        holder.checkBox.setChecked(tarea.isCompletada()); // Chequear según el estado
+        holder.checkBox.setEnabled(false);  // Desactivar el cambio del checkbox
 
-        // Mostrar los días de recordatorio de la tarea
-        holder.textDiasRecordatorio.setText(tarea.getDiasRecordatorio());
-
-        // Mostrar el estado de completado
-        holder.checkBox.setChecked(tarea.isCompletada());
-
-        // Si la tarea está eliminada, ocultar el CheckBox; si no, mostrarlo y configurar su estado
-        if (tarea.isEliminada()) {
-            holder.checkBox.setVisibility(View.GONE);
-        } else {
-            holder.checkBox.setVisibility(View.VISIBLE);
-        }
-
-        // Configurar el listener para el CheckBox
-        holder.checkBox.setOnClickListener(v -> {
-            if (!tarea.isEliminada()) {
-                mostrarDialogoConfirmacion(tarea, holder.checkBox, position);
-            }
+        // Configurar el botón de eliminar
+        holder.btnEliminar.setOnClickListener(v -> {
+            mostrarDialogoConfirmacion(tarea, holder.checkBox, position);
         });
     }
 
+    // Método para mostrar el cuadro de diálogo de confirmación al eliminar una tarea
     private void mostrarDialogoConfirmacion(Tarea tarea, CheckBox checkBox, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Confirmación");
@@ -77,7 +56,6 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
 
         builder.setPositiveButton("Sí", (dialog, which) -> {
             moverTareaAPapelera(tarea, position);
-            Toast.makeText(context, "La tarea se ha movido a la papelera", Toast.LENGTH_SHORT).show();
         });
 
         builder.setNegativeButton("No", (dialog, which) -> checkBox.setChecked(tarea.isCompletada()));
@@ -85,13 +63,14 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
         builder.show();
     }
 
+    // Método para mover la tarea a la papelera de forma asincrónica
     @SuppressLint("StaticFieldLeak")
     private void moverTareaAPapelera(final Tarea tarea, final int position) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                tareaDataAccess.marcarTareaComoEliminada(tarea);
-                tarea.setEliminada(true);
+                // Llamar al método de TareaDataAccess para mover la tarea
+                tareaDataAccess.moverTareaAPapelera(tarea);
                 return null;
             }
 
@@ -112,6 +91,7 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
     public static class TareaViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView textTitulo, textCategoria, textFecha, textDiasRecordatorio;
+        Button btnEliminar; // Declaración del botón de eliminar
 
         public TareaViewHolder(View itemView) {
             super(itemView);
@@ -120,6 +100,7 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             textCategoria = itemView.findViewById(R.id.textViewCategoriaTarea);
             textFecha = itemView.findViewById(R.id.textViewFechaTarea);
             textDiasRecordatorio = itemView.findViewById(R.id.textViewDiasRecordatorio);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar); // Inicialización del botón de eliminar
         }
     }
 

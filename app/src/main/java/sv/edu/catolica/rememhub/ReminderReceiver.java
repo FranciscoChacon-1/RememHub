@@ -1,5 +1,6 @@
 package sv.edu.catolica.rememhub;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 public class ReminderReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "tareas_channel"; // Usamos un solo canal
 
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
         String tareaTitulo = intent.getStringExtra("titulo");  // Cambié el nombre a "titulo" para que coincida con el de Añadirtarea.java
@@ -30,12 +32,16 @@ public class ReminderReceiver extends BroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
 
+
         // Crear la notificación
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(tareaTitulo)
                 .setContentText(tareaDescripcion)
-                .setSmallIcon(R.drawable.ic_launcher_background)  // Asegúrate de que el icono exista en los recursos
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)  // Añadir prioridad alta para que sea más visible
+                .setAutoCancel(true)  // Para que la notificación desaparezca cuando el usuario la toque
                 .build();
+
 
         // Usar un ID único basado en el tiempo para evitar sobrescribir notificaciones
         int notificationId = (int) System.currentTimeMillis(); // ID único

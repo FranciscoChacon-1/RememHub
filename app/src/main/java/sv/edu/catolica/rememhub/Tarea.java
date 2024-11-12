@@ -1,80 +1,109 @@
 package sv.edu.catolica.rememhub;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Tarea {
     private int id;
-    private String nombre;
+    private String titulo;
     private String categoria;
-    private String fecha;  // La fecha es un String
+    private String fechaCumplimiento;  // Cambié 'fecha' por 'fechaCumplimiento'
     private boolean completada;
     private String descripcion;
     private boolean eliminada;
     private String diasRecordatorio;
+    private int categoriaId;
+    private String fechaCreacion;
+    private String horaCumplimiento;
+    private String horaRecordatorio;
+    private Boolean estado;
 
     // Constructor con días de recordatorio
-    public Tarea(String nombre, String categoria, String fecha, boolean completada, String diasRecordatorio) {
-        this.nombre = nombre;
+    public Tarea(String nombre, String categoria, String fechaCumplimiento, boolean completada, String diasRecordatorio) {
+        this.titulo = nombre;
         this.categoria = categoria;
-        this.fecha = fecha;
+        this.fechaCumplimiento = fechaCumplimiento;
         this.completada = completada;
         this.diasRecordatorio = diasRecordatorio;
     }
 
     // Constructor sin días de recordatorio
-    public Tarea(String nombre, String categoria, String fecha, boolean completada) {
-        this.nombre = nombre;
+    public Tarea(String nombre, String categoria, String fechaCumplimiento, boolean completada) {
+        this.titulo = nombre;
         this.categoria = categoria;
-        this.fecha = fecha;
+        this.fechaCumplimiento = fechaCumplimiento;
         this.completada = completada;
     }
 
-    //Comit José
-    public Tarea() {
-        this.nombre = nombre;
-        this.categoria = categoria;
-        this.fecha = fecha;
-        this.descripcion = descripcion;
-        this.completada = completada;
-
-    }
-
-
-    // Para el historial
-    public Tarea(int id, String nombre, String categoria, String fecha) {
+    public Tarea(int id, String titulo, String fechaCumplimiento, String categoria, String cumplimiento, String horaCumplimiento, String horaRecordatorio) {
         this.id = id;
-        this.nombre = nombre;
-        this.categoria = categoria;
-        this.fecha = fecha;
-        this.completada = false;  // Valor predeterminado, o puedes dejarlo a tu criterio
-        this.eliminada = false;   // Valor predeterminado
-        this.diasRecordatorio = "";  // Valor predeterminado
+        this.titulo = titulo;
+        this.fechaCumplimiento = fechaCumplimiento;
+        this.categoria=categoria;
+        this.fechaCumplimiento = cumplimiento;
+        this.horaCumplimiento = horaCumplimiento;
+        this.horaRecordatorio = horaRecordatorio;
     }
 
+    public Tarea(int id, String titulo, String fechaCumplimiento, String categoria, String fechaCumplimiento1) {
+        this.id = id;
+        this.titulo = titulo;
+        this.categoria=categoria;
+        this.fechaCumplimiento = fechaCumplimiento;
+        this.categoria = categoria;
+        this.fechaCumplimiento = fechaCumplimiento1;
 
-    public Tarea(int id, String nombre, String categoria, String fecha, String fechaCumplimiento, String horaCumplimiento, String horaRecordatorio) {
+    }
+
+    public Tarea(String titulo, String descripcion, String categoria, String fechaCreacion, String fechaCumplimiento, String horaCumplimiento, String horaRecordatorio, boolean completada) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.categoria = categoria;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaCumplimiento = fechaCumplimiento;
+        this.horaCumplimiento = horaCumplimiento;
+        this.horaRecordatorio = horaRecordatorio;
+        this.estado = completada;
+    }
+
+    public Tarea() {
+
+    }
+
+    public Tarea(int id, String titulo, String categoria, String fechaCumplimiento, boolean completada) {
+        this.id = id;
+        this.titulo = titulo;
+        this.fechaCumplimiento = fechaCumplimiento;
+        this.categoria=categoria;
+        this.estado=completada;
     }
 
     // Método para convertir la fecha de String a Date
     public Date getFechaCumplimiento() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return sdf.parse(fecha);  // Convierte el String a Date
+            return sdf.parse(fechaCumplimiento);  // Convierte el String a Date
         } catch (ParseException e) {
             e.printStackTrace();
             return null;  // En caso de error, retorna null
         }
     }
 
-    // Métodos getter y setter para los demás atributos
-    public String getNombre() {
-        return nombre;
+    public String getFechaCumplimientoString() {
+        return fechaCumplimiento;  // Devolver directamente la fecha como String
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    // Métodos getter y setter para los demás atributos
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getCategoria() {
@@ -86,11 +115,12 @@ public class Tarea {
     }
 
     public String getFecha() {
-        return fecha;
+        return fechaCumplimiento;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    // Agregar el setter para fechaCumplimiento
+    public void setFechaCumplimiento(String fechaCumplimiento) {
+        this.fechaCumplimiento = fechaCumplimiento;
     }
 
     public boolean isCompletada() {
@@ -133,4 +163,23 @@ public class Tarea {
         this.diasRecordatorio = diasRecordatorio;
     }
 
+    // Método getter para obtener la ID de la categoría
+    public int getCategoriaId() {
+        return categoriaId;
+    }
+
+    // Método getter para obtener la hora de cumplimiento
+    public String getHoraCumplimiento() {
+        return horaCumplimiento;
+    }
+
+    // Método getter para obtener la hora de recordatorio
+    public String getHoraRecordatorio() {
+        return horaRecordatorio;
+    }
+
+    // Método getter para obtener la fecha de creación
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
 }

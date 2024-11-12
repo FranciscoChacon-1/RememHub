@@ -49,7 +49,7 @@ public class Categoria_activity extends AppCompatActivity {
 
 
     private void nuevoRegistro() {
-        Intent intent = new Intent(this, MainActivity2.class);
+        Intent intent = new Intent(this, NuevaCategoria.class);
         startActivity(intent);
         finish();
 
@@ -69,6 +69,9 @@ public class Categoria_activity extends AppCompatActivity {
     public void Buscraxcat(View view) {
         verCat();
     }
+
+
+
 }
 
 

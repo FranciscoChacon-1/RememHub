@@ -1,66 +1,34 @@
 package sv.edu.catolica.rememhub;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
+
+import android.view.View;
+import android.widget.Button;
 
 public class PapeleraActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewPapelera;
-    private TareaAdapter tareaAdapterPapelera;
-    private List<Tarea> listaTareasPapelera;
-    private RememhubBD dbHelper;
+    private RecyclerView recyclerView;
+    private TareaPapeleraAdapter adapter;
     private TareaDataAccess tareaDataAccess;
-    private TextView textViewTarea;
-    private String tareaNombre;
+    private Button btnVaciarPapelera;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_papelera);
 
-        // Inicializar el TextView
-        textViewTarea = findViewById(R.id.textViewTareaPapelera);
-
-        // Recibir el nombre de la tarea desde el Intent (en caso de que quieras mostrar detalles)
-        tareaNombre = getIntent().getStringExtra("tarea_nombre");
-
-        // Inicializar el acceso a la base de datos
-        dbHelper = new RememhubBD(this);
         tareaDataAccess = new TareaDataAccess(this);
+        recyclerView = findViewById(R.id.recyclerViewPapelera);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        btnVaciarPapelera = findViewById(R.id.btnVaciarPapelera);
 
-        // Inicializar el RecyclerView
-        recyclerViewPapelera = findViewById(R.id.recyclerViewPapelera);
-        recyclerViewPapelera.setLayoutManager(new LinearLayoutManager(this));
+        cargarTareasPapelera();
 
-        // Obtener las tareas eliminadas de la base de datos
-        listaTareasPapelera = tareaDataAccess.obtenerTareasEliminadas();
-
-// Crear el adaptador y asignarlo al RecyclerView
-        tareaAdapterPapelera = new TareaAdapter(this, listaTareasPapelera); // No se necesita pasar 'true' o 'false' aquí
-        recyclerViewPapelera.setAdapter(tareaAdapterPapelera);
-
-
-        // Si hay un nombre de tarea, mostrar detalles (si es necesario)
-        if (tareaNombre != null) {
-            Tarea tarea = obtenerTareaPorNombre(tareaNombre);
-            if (tarea != null) {
-                textViewTarea.setText(tarea.getNombre() + "\n" + tarea.getCategoria() + "\n" + tarea.getFecha());
-            }
-        }
-
-        // Botón para vaciar la papelera
-        Button btnVaciarPapelera = findViewById(R.id.btnVaciarPapelera);
         btnVaciarPapelera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,23 +37,26 @@ public class PapeleraActivity extends AppCompatActivity {
         });
     }
 
-    // Método para vaciar la papelera
-    private void vaciarPapelera() {
-        // Lógica para vaciar la papelera
-        for (Tarea tarea : listaTareasPapelera) {
-            tareaDataAccess.eliminarTarea(tarea);  // Método para eliminar una tarea de la base de datos
+    private void cargarTareasPapelera() {
+        List<Tarea> listaTareasPapelera = tareaDataAccess.obtenerTareasPapelera();
+        if (listaTareasPapelera != null && !listaTareasPapelera.isEmpty()) {
+            adapter = new TareaPapeleraAdapter(this, listaTareasPapelera);
+            recyclerView.setAdapter(adapter);
+        } else {
+            Toast.makeText(this, "La papelera está vacía", Toast.LENGTH_SHORT).show();
         }
-
-        // Actualizar la interfaz de usuario
-        listaTareasPapelera.clear();
-        tareaAdapterPapelera.notifyDataSetChanged();
-
-        Toast.makeText(this, "Papelera vacía", Toast.LENGTH_SHORT).show();
     }
 
-    // Método para obtener la tarea por nombre
-    private Tarea obtenerTareaPorNombre(String nombre) {
-        return tareaDataAccess.obtenerTareaPorNombre(nombre);
+    private void vaciarPapelera() {
+        // Llama al método en TareaDataAccess para eliminar todas las tareas en papelera y sus días de recordatorio
+        tareaDataAccess.eliminarTareasPapelera();
+        cargarTareasPapelera(); // Recarga la lista después de vaciar la papelera
+        Toast.makeText(this, "Papelera vaciada", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarTareasPapelera();
+    }
 }

@@ -78,10 +78,6 @@ public class detalles_de_tarea extends AppCompatActivity {
         cargarTareas();
         cargarCategorias();
 
-        // Configurar listeners para seleccionar fecha y hora
-        btnFecha.setOnClickListener(v -> showDatePickerDialog());
-        btnHora.setOnClickListener(v -> showTimePickerDialog());
-        btnHoraRecordatorio.setOnClickListener(v -> showTimePickerDialogRecordatorio());
 
         // Configurar botones
         btnGuardar.setOnClickListener(v -> editarTarea());
@@ -154,7 +150,8 @@ public class detalles_de_tarea extends AppCompatActivity {
         ArrayList<Integer> tareasIds = new ArrayList<>();
 
         // Consulta para obtener las tareas que no están en la papelera
-        String query = "SELECT t.id, t.titulo FROM Tareas t LEFT JOIN Papelera p ON t.id = p.id WHERE p.id IS NULL";
+        String query = "SELECT id, titulo FROM Tareas WHERE papelera = 0";
+
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -226,14 +223,15 @@ public class detalles_de_tarea extends AppCompatActivity {
 
     private void editarTarea() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String categoriaSeleccionada = spCategoria.getSelectedItem().toString(); // Nombre de la categoría seleccionada
-        int categoriaId = obtenerCategoriaIdPorNombre(categoriaSeleccionada); // Obtener ID de la categoría
+        String categoriaSeleccionada = spCategoria.getSelectedItem().toString();
+        int categoriaId = obtenerCategoriaIdPorNombre(categoriaSeleccionada);
 
         if (categoriaId == -1) {
             Toast.makeText(this, "Error al obtener la categoría seleccionada", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Actualizar datos de la tarea en la base de datos
         ContentValues values = new ContentValues();
         values.put("titulo", etTituloTarea.getText().toString());
         values.put("descripcion", etDescripcion.getText().toString());
@@ -245,49 +243,85 @@ public class detalles_de_tarea extends AppCompatActivity {
 
         db.update("Tareas", values, "id = ?", new String[]{String.valueOf(selectedTareaId)});
 
-        // Actualizar los días de recordatorio
+        // Obtener días de recordatorio seleccionados
         String selectedOption = (String) spDias.getSelectedItem();
-        List<String> diasRecordatorio = new ArrayList<>();
+        List<String> diasRecordatorio = obtenerDiasRecordatorio(selectedOption);
 
-        if (selectedOption.equals("Cada día")) {
-            diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-        } else if (selectedOption.equals("Cada día (Lun - Vie)")) {
-            diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes");
-        } else if (selectedOption.equals("Cada día (Sáb - Dom)")) {
-            diasRecordatorio = Arrays.asList("Sábado", "Domingo");
-        } else if (!diasPersonalizados.isEmpty()) {
-            diasRecordatorio = new ArrayList<>(diasPersonalizados);  // Usamos los días personalizados seleccionados
-        }
+        // Actualizar días de recordatorio en la base de datos
+        actualizarDiasRecordatorio(db, diasRecordatorio);
 
-        // Eliminar días antiguos de la tabla DiasRecordatorio
-        db.delete("DiasRecordatorio", "tarea_id = ?", new String[]{String.valueOf(selectedTareaId)});
-
-        // Insertar los nuevos días de recordatorio en la tabla DiasRecordatorio
-        for (String dia : diasRecordatorio) {
-            ContentValues diaValues = new ContentValues();
-            diaValues.put("tarea_id", selectedTareaId);
-            diaValues.put("dia", dia);
-            db.insert("DiasRecordatorio", null, diaValues);
-        }
-
-        // Actualizar alarmas de tarea
+        // Cancelar y reprogramar alarmas con nueva información
         cancelarAlarmasViejas();
-        programarAlarmas();
+        if (!checkBoxCompletada.isChecked()) {  // Solo si la tarea no está completada
+            programarAlarmas();  // Esto incluye alarmas para recordatorios y cumplimiento
+        }
 
         db.close();
         Toast.makeText(this, "Tarea editada con éxito", Toast.LENGTH_SHORT).show();
         finish();
     }
 
+    private List<String> obtenerDiasRecordatorio(String selectedOption) {
+        if (selectedOption.equals("Cada día")) {
+            return Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+        } else if (selectedOption.equals("Cada día (Lun - Vie)")) {
+            return Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes");
+        } else if (selectedOption.equals("Cada día (Sáb - Dom)")) {
+            return Arrays.asList("Sábado", "Domingo");
+        } else {
+            return new ArrayList<>(diasPersonalizados);
+        }
+    }
+
+    private void actualizarDiasRecordatorio(SQLiteDatabase db, List<String> diasRecordatorio) {
+        // Eliminar días antiguos
+        db.delete("DiasRecordatorio", "tarea_id = ?", new String[]{String.valueOf(selectedTareaId)});
+
+        // Insertar nuevos días
+        for (String dia : diasRecordatorio) {
+            ContentValues diaValues = new ContentValues();
+            diaValues.put("tarea_id", selectedTareaId);
+            diaValues.put("dia", dia);
+            db.insert("DiasRecordatorio", null, diaValues);
+        }
+    }
 
     private void cancelarAlarmasViejas() {
-        // Aquí cancelamos las alarmas viejas, para evitar alarmas duplicadas
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this, selectedTareaId, new Intent(this, NotificationReceiver.class),
-                PendingIntent.FLAG_MUTABLE); // Agregar FLAG_IMMUTABLE
-        alarmManager.cancel(pendingIntent);
+
+        if (alarmManager == null) return;
+
+        // Crear un Intent para el receptor de notificaciones
+        Intent intent = new Intent(this, NotificationReceiver.class);
+
+        // Obtener los días de recordatorio seleccionados
+        String selectedOption = (String) spDias.getSelectedItem();
+        List<String> diasRecordatorio = obtenerDiasRecordatorio(selectedOption);
+
+        // Iterar sobre cada día y hora para cancelar todas las alarmas individuales
+        for (String dia : diasRecordatorio) {
+            int dayOfWeek = obtenerDayOfWeek(dia);
+
+            // Asegúrate de cancelar cada combinación de horas/minutos posibles para los recordatorios
+            try {
+                int hora = Integer.parseInt(etHoraRecordatorio.getText().toString().split(":")[0]);
+                int minuto = Integer.parseInt(etHoraRecordatorio.getText().toString().split(":")[1]);
+
+                int requestCode = selectedTareaId * 10000 + dayOfWeek * 100 + hora * 10 + minuto; // Igual que en programarAlarmasParaDias
+
+                PendingIntent pendingIntentDia = PendingIntent.getBroadcast(
+                        this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+                // Cancelar la alarma
+                alarmManager.cancel(pendingIntentDia);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+
 
     private int obtenerCategoriaIdPorNombre(String nombreCategoria) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -305,85 +339,106 @@ public class detalles_de_tarea extends AppCompatActivity {
 
     @SuppressLint("ScheduleExactAlarm")
     private void programarAlarmas() {
-        // Aquí programamos las nuevas alarmas basándonos en los cambios realizados
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        // Crear el Intent para NotificationReceiver
-        Intent intent = new Intent(this, NotificationReceiver.class);
+        // Configurar la notificación de cumplimiento
+        programarAlarmaCumplimiento(alarmManager);
 
-        // Para que la notificación no salga con el texto "Recordatorio: null" de antes
-        intent.putExtra("titulo", etTituloTarea.getText().toString()); // Título de la tarea
-        intent.putExtra("descripcion", etDescripcion.getText().toString()); // Descripción de la tarea
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this, selectedTareaId, intent,
-                PendingIntent.FLAG_IMMUTABLE); // FLAG_IMMUTABLE
-
-        // Recuperar la opción seleccionada en el spinner
-        String selectedOption = (String) spDias.getSelectedItem();
-        List<String> diasRecordatorio = new ArrayList<>();
-
-        // Determinamos los días de la alarma según la opción seleccionada
-        if (selectedOption.equals("Cada día")) {
-            diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-        } else if (selectedOption.equals("Cada día (Lun - Vie)")) {
-            diasRecordatorio = Arrays.asList("Lunes", "Martes", "Miércoles", "Jueves", "Viernes");
-        } else if (selectedOption.equals("Cada día (Sáb - Dom)")) {
-            diasRecordatorio = Arrays.asList("Sábado", "Domingo");
-        } else if (!diasPersonalizados.isEmpty()) {
-            diasRecordatorio = new ArrayList<>(diasPersonalizados); // Usamos los días personalizados
-        }
-
-        // Programar las alarmas para los días seleccionados
-        programarAlarmasParaDias(alarmManager, pendingIntent, diasRecordatorio);
+        // Configurar las notificaciones de recordatorio
+        programarAlarmasParaRecordatorios(alarmManager);
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    private void programarAlarmasParaDias(AlarmManager alarmManager, PendingIntent pendingIntent, List<String> diasRecordatorio) {
+    private void programarAlarmaCumplimiento(AlarmManager alarmManager) {
+        // Obtener fecha y hora de cumplimiento
+        String[] fechaParts = etFecha.getText().toString().split("-");
+        String[] horaParts = etHora.getText().toString().split(":");
+        int año = Integer.parseInt(fechaParts[0]);
+        int mes = Integer.parseInt(fechaParts[1]) - 1; // Meses comienzan desde 0 en Calendar
+        int día = Integer.parseInt(fechaParts[2]);
+        int hora = Integer.parseInt(horaParts[0]);
+        int minuto = Integer.parseInt(horaParts[1]);
+
+        // Crear el calendario con fecha y hora de cumplimiento
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(año, mes, día, hora, minuto, 0);
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("titulo", etTituloTarea.getText().toString());
+        intent.putExtra("descripcion", etDescripcion.getText().toString());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, selectedTareaId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        if (alarmManager != null && calendar.getTimeInMillis() > System.currentTimeMillis()) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
+
+    private void programarAlarmasParaRecordatorios(AlarmManager alarmManager) {
+        // Crear intent para el receptor de notificaciones
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("titulo", etTituloTarea.getText().toString());
+        intent.putExtra("descripcion", etDescripcion.getText().toString());
+
+        // Obtener los días de recordatorio según la opción seleccionada
+        String selectedOption = (String) spDias.getSelectedItem();
+        List<String> diasRecordatorio = obtenerDiasRecordatorio(selectedOption);
+
+        // Programar alarmas para cada día
+        for (String dia : diasRecordatorio) {
+            programarAlarmaParaDia(alarmManager, dia, intent);
+        }
+    }
+
+
+
+    @SuppressLint("ScheduleExactAlarm")
+    private void programarAlarmaParaDia(AlarmManager alarmManager, String dia, Intent intent) {
+        // Crea un calendario para la fecha del recordatorio según el día especificado
         Calendar calendar = Calendar.getInstance();
 
-        // Obtener la hora del recordatorio desde el EditText
-        int hora = Integer.parseInt(etHoraRecordatorio.getText().toString().split(":")[0]);
-        int minuto = Integer.parseInt(etHoraRecordatorio.getText().toString().split(":")[1]);
+        switch (dia) {
+            case "Lunes":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                break;
+            case "Martes":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+                break;
+            case "Miércoles":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+                break;
+            case "Jueves":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+                break;
+            case "Viernes":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+                break;
+            case "Sábado":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                break;
+            case "Domingo":
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                break;
+        }
 
-        for (String dia : diasRecordatorio) {
-            int dayOfWeek = obtenerDayOfWeek(dia);
-            if (dayOfWeek == -1) continue; // Omite si el día es inválido
+        // Configura la hora del recordatorio
+        calendar.set(Calendar.HOUR_OF_DAY, 9);  // Cambia por la hora de recordatorio deseada
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
 
-            // Configurar el calendario para el próximo día de recordatorio
-            calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-            calendar.set(Calendar.HOUR_OF_DAY, hora);
-            calendar.set(Calendar.MINUTE, minuto);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
+        // Genera el PendingIntent único para el día
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, dia.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            // Asegúrate de que la fecha sea en el futuro
-            if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-                calendar.add(Calendar.WEEK_OF_YEAR, 1); // Si la fecha es en el pasado, sumamos una semana
-            }
+        // Cancelar cualquier alarma existente con el mismo PendingIntent
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+        }
 
-
-            // Crear el Intent para NotificationReceiver
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            intent.putExtra("titulo", etTituloTarea.getText().toString()); // Título de la tarea
-            intent.putExtra("descripcion", etDescripcion.getText().toString()); // Descripción de la tarea
-
-
-// Crear un PendingIntent único para este día y hora específicos
-            int requestCode = selectedTareaId * 10000 + dayOfWeek * 100 + hora * 10 + minuto; // Genera un requestCode único usando el ID de tarea
-            PendingIntent pendingIntentDia = PendingIntent.getBroadcast(
-                    this,
-                    requestCode,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
-
-
-// Programar la alarma
-            if (alarmManager != null) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntentDia);
-            }
-
+        // Programa la nueva alarma si el tiempo es válido
+        if (calendar.getTimeInMillis() > System.currentTimeMillis()) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
     }
 
@@ -405,23 +460,46 @@ public class detalles_de_tarea extends AppCompatActivity {
     }
 
     private void showDatePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-        new DatePickerDialog(this, (view, year, monthOfYear, dayOfMonth) -> {
-            etFecha.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                //(view, year1, month1, dayOfMonth) -> tvFecha.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1),
+                (view, year1, month1, dayOfMonth) -> etFecha.setText(year1 + "-" + (month1 + 1) + "-" + dayOfMonth),
+                //'2024-10-03'
+                year, month, day
+        );
+        datePickerDialog.show();
     }
 
-    private void showTimePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-        new TimePickerDialog(this, (view, hourOfDay, minute) -> {
-            etHora.setText(hourOfDay + ":" + minute);
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+    public void mostrarCalendario(View v){
+        showDatePickerDialog();
     }
 
-    private void showTimePickerDialogRecordatorio() {
-        Calendar calendar = Calendar.getInstance();
-        new TimePickerDialog(this, (view, hourOfDay, minute) -> {
-            etHoraRecordatorio.setText(hourOfDay + ":" + minute);
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+    public void mostrarRecordatorio(View V) {
+        TimePickerDialog d = new TimePickerDialog(this, (timePicker, hour, minute) -> {
+            // Formato de hora con dos dígitos para hora y minuto
+            etHoraRecordatorio.setText(String.format("%02d:%02d", hour, minute));
+        }, 10, 30, true);
+        d.show();
+    }
+
+
+    public void mostrarHorario(View view) {
+        int hora = 0, minuto = 0;
+
+        if (!etHora.getText().toString().isEmpty()) {
+            String[] horaArray = etHora.getText().toString().split(":");
+            hora = Integer.parseInt(horaArray[0]);
+            minuto = Integer.parseInt(horaArray[1]);
+        }
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(detalles_de_tarea.this,
+                (view1, hourOfDay, minute) -> etHora.setText(String.format("%02d:%02d", hourOfDay, minute)), hora, minuto, true);
+
+        timePickerDialog.show();
     }
 }

@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import sv.edu.catolica.rememhub.db.DbCategorias;
 
-public class MainActivity2 extends AppCompatActivity {
+public class NuevaCategoria extends AppCompatActivity {
     private EditText e1,txtNombre;
     private Button btnguardarcat;
 
@@ -24,7 +24,7 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_nueva_cat);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main2), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -41,24 +41,24 @@ public class MainActivity2 extends AppCompatActivity {
                 // Validar si el campo está vacío o contiene solo espacios
                 if (nombreCategoria.isEmpty()) {
                     // Mostrar un mensaje de error si el campo está vacío
-                    Toast.makeText(MainActivity2.this, "El nombre de la categoría no puede estar vacío", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NuevaCategoria.this, "El nombre de la categoría no puede estar vacío", Toast.LENGTH_SHORT).show();
                 } else {
                     // Si el campo no está vacío, continuar con el proceso de guardar la categoría
-                    DbCategorias dbCategorias = new DbCategorias(MainActivity2.this);
+                    DbCategorias dbCategorias = new DbCategorias(NuevaCategoria.this);
                     long id = dbCategorias.insertarCategoria(nombreCategoria);
 
                     if (id > 0) {
-                        Toast.makeText(MainActivity2.this, "Categoría Agregada", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NuevaCategoria.this, "Categoría Agregada", Toast.LENGTH_SHORT).show();
                         limpiar(); // Método para limpiar el campo de entrada
 
                         // Regresar a MainActivity
-                        Intent intent = new Intent(MainActivity2.this, Categoria_activity.class);
+                        Intent intent = new Intent(NuevaCategoria.this, Categoria_activity.class);
                         startActivity(intent); // Inicia MainActivity
 
 
                         finish(); // Cierra MainActivity2
                     } else {
-                        Toast.makeText(MainActivity2.this, "Error al guardar la Categoría", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NuevaCategoria.this, "Error al guardar la Categoría", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
