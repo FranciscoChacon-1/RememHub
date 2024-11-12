@@ -30,7 +30,7 @@ public class menu_inicio extends AppCompatActivity {
     }
 
     public void Categorias(View view) {
-        Intent intent = new Intent(this, MainActivity.class); // Redirige a MainActivity2
+        Intent intent = new Intent(this, Categoria_activity.class); // Redirige a MainActivity2
         startActivity(intent);
     }
 

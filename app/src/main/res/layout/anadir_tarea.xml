@@ -13,7 +13,7 @@
     android:paddingTop="20dp"
     android:paddingRight="40dp"
     android:paddingBottom="30dp"
-    tools:context=".MainActivity">
+    tools:context=".Categoria_activity">
 
     <TextView
         android:layout_width="match_parent"

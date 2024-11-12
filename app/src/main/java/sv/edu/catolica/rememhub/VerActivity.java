@@ -18,40 +18,37 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import sv.edu.catolica.rememhub.db.DbCategorias;
+
 public class VerActivity extends AppCompatActivity {
     private EditText txtNombre;
     Button btnguardarcat;
-    FloatingActionButton fabEditar, fabEliminar;
+    FloatingActionButton fabEditar,fabEliminar;
     boolean correcto = false;
 
     Categorias categorias;
     int id = 0;
-    RememhubBD db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_ver);
-
+        setContentView(R.layout.activity_editar_cat);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.actvityVer), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         txtNombre = findViewById(R.id.editTxtConfiguracion);
         btnguardarcat = findViewById(R.id.btnguardarCat);
         fabEditar = findViewById(R.id.fabEditar);
         fabEliminar = findViewById(R.id.fabElminar);
 
-        // Inicializar la base de datos RememhubBD
-        db = new RememhubBD(this);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
-                id = 0;
+                id = 0; // Usar un valor por defecto como 0 en lugar de Integer.parseInt(null)
             } else {
                 id = extras.getInt("ID", 0);
             }
@@ -59,8 +56,8 @@ public class VerActivity extends AppCompatActivity {
             id = (int) savedInstanceState.getSerializable("ID");
         }
 
-        // Obtener la categoría directamente de RememhubBD
-        categorias = obtenerCategoria(id);
+        DbCategorias dbCategorias = new DbCategorias(VerActivity.this);
+        categorias = dbCategorias.verCategorias(id);
 
         if (categorias != null) {
             txtNombre.setText(categorias.getNombre());
@@ -68,45 +65,46 @@ public class VerActivity extends AppCompatActivity {
             txtNombre.setInputType(InputType.TYPE_NULL);
         }
 
-        fabEditar.setOnClickListener(view -> {
-            Intent intent = new Intent(VerActivity.this, EditarActivity.class);
-            intent.putExtra("ID", id);
-            startActivity(intent);
+        fabEditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(VerActivity.this, EditarActivity.class);
+                intent.putExtra("ID", id);
+                startActivity(intent);
+                finish();
+            }
+        });
+        fabEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(VerActivity.this);
+                builder.setMessage("Desea Eliminar esta Categoria")
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (dbCategorias.ElimiarCategoria(id)) {
+                                    Toast.makeText(VerActivity.this, "Categoria Eliminada", Toast.LENGTH_SHORT).show();
+                                    lista();
+
+                                }
+                            }
+
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).show();
+            }
         });
 
-        fabEliminar.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(VerActivity.this);
-            builder.setMessage("Desea Eliminar esta Categoria")
-                    .setPositiveButton("Si", (dialogInterface, i) -> {
-                        if (eliminarCategoria(id)) {
-                            Toast.makeText(VerActivity.this, "Categoria Eliminada", Toast.LENGTH_SHORT).show();
-                            lista();
-                        }
-                    })
-                    .setNegativeButton("NO", (dialogInterface, i) -> {
-                    }).show();
-        });
     }
-
-    private Categorias obtenerCategoria(int id) {
-        // Lógica para obtener la categoría usando RememhubBD
-        // Aquí se debe consultar la base de datos y devolver una instancia de Categorias
-        // Ejemplo de consulta:
-        // SELECT * FROM Categorias WHERE id = ?
-        // Nota: Implementa esta función según las necesidades específicas de tu aplicación.
-        return null; // Reemplaza con la implementación adecuada
-    }
-
-    private boolean eliminarCategoria(int id) {
-        // Lógica para eliminar la categoría usando RememhubBD
-        // Ejemplo de eliminación:
-        // DELETE FROM Categorias WHERE id = ?
-        // Nota: Implementa esta función según las necesidades específicas de tu aplicación.
-        return true; // Cambia este retorno según la lógica implementada
-    }
-
-    private void lista() {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void lista(){
+        Intent intent = new Intent(this, Categoria_activity.class);
         startActivity(intent);
+        finish();
     }
+
+
 }

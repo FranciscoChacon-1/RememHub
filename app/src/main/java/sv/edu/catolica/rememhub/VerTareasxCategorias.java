@@ -25,8 +25,8 @@ import sv.edu.catolica.rememhub.db.DbTareas;
 public class VerTareasxCategorias extends AppCompatActivity {
     Spinner spinnercat;
     RecyclerView lista;
-    TareaAdapter tareaAdapter; // Adaptador para el RecyclerView
-    List<Tarea> listaTareas; // Lista de tareas
+    TareaAdapter tareaAdapter;
+    List<Tarea> listaTareas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +58,9 @@ public class VerTareasxCategorias extends AppCompatActivity {
     }
 
     private void cargarTareas(int categoriaId) {
-        // Aquí debes implementar la lógica para cargar las tareas de la base de datos según la categoría
         DbTareas dbTareas = new DbTareas(this);
-        listaTareas = dbTareas.obtenerTareasPorCategoria(categoriaId); // Método que debes implementar en DbTareas
+        listaTareas = dbTareas.obtenerTareasPorCategoria(categoriaId);
 
-        // Configurar el adaptador con la lista de tareas
         tareaAdapter = new TareaAdapter(this, listaTareas);
         lista.setAdapter(tareaAdapter);
     }
@@ -85,10 +83,8 @@ public class VerTareasxCategorias extends AppCompatActivity {
                         listCat.add(cat);
                     } while (cursor.moveToNext());
                 }
-            } catch (IllegalArgumentException e) {
-                Log.e("DbError", "Error: " + e.getMessage());
             } finally {
-                cursor.close(); // Asegúrate de cerrar el cursor
+                cursor.close();
             }
         }
         dbCategorias.close();

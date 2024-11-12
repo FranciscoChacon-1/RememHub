@@ -31,6 +31,17 @@ public class Tarea {
         this.completada = completada;
     }
 
+    //Comit José
+    public Tarea() {
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.completada = completada;
+
+    }
+
+
     // Para el historial
     public Tarea(int id, String nombre, String categoria, String fecha) {
         this.id = id;
@@ -121,6 +132,5 @@ public class Tarea {
     public void setDiasRecordatorio(String diasRecordatorio) {
         this.diasRecordatorio = diasRecordatorio;
     }
-
 
 }

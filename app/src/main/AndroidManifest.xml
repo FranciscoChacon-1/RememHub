@@ -43,7 +43,7 @@
         <activity android:name=".detalles_de_tarea" android:exported="false" />
 
 
-        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".Categoria_activity" android:exported="false" />
         <activity android:name=".tareas_pendientes_inicio" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,14 +53,14 @@
         <activity android:name=".menu_inicio" android:exported="true" />
         <activity android:name=".PapeleraActivity" android:exported="false" />
         <activity android:name=".VerTareasxCategorias" android:exported="false" />
-        <activity android:name=".Añadirtarea" android:exported="true" android:parentActivityName=".MainActivity" />
-        <activity android:name=".VerActivity" android:exported="false" android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity2" android:exported="false" android:parentActivityName=".MainActivity" />
-        <activity android:name=".EditarActivity" android:exported="false" android:parentActivityName=".MainActivity" />
+        <activity android:name=".Añadirtarea" android:exported="true" android:parentActivityName=".Categoria_activity" />
+        <activity android:name=".VerActivity" android:exported="false" android:parentActivityName=".Categoria_activity" />
+        <activity android:name=".MainActivity2" android:exported="false" android:parentActivityName=".Categoria_activity" />
+        <activity android:name=".EditarActivity" android:exported="false" android:parentActivityName=".Categoria_activity" />
 
         <!-- Meta-data para PARENT_ACTIVITY -->
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity" />
+            android:value=".Categoria_activity" />
     </application>
 </manifest>

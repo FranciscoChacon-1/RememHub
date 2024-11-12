@@ -1,13 +1,8 @@
 package sv.edu.catolica.rememhub;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TimePicker;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,11 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import sv.edu.catolica.rememhub.Categorias;
 import sv.edu.catolica.rememhub.adaptadores.ListaCategoriasAdapter;
 import sv.edu.catolica.rememhub.db.DbCategorias;
 
-public class MainActivity extends AppCompatActivity {
+public class Categoria_activity extends AppCompatActivity {
     RecyclerView listaCategoria;
     ArrayList<Categorias> listArrayCategorias;
 
@@ -43,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         listaCategoria=findViewById(R.id.ListaCategoria);
         listaCategoria.setLayoutManager(new LinearLayoutManager(this));
 
-        DbCategorias dbCategorias = new DbCategorias(MainActivity.this);
+        DbCategorias dbCategorias = new DbCategorias(Categoria_activity.this);
         listArrayCategorias = new ArrayList<Categorias>();
         ListaCategoriasAdapter adapter = new ListaCategoriasAdapter(dbCategorias.mostrarContactos());
         listaCategoria.setAdapter(adapter);
@@ -52,28 +46,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_pricipal, menu);
-        return true;
 
-
-    }
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //(item.getItemId() == id.menus_nuevo)
-        if (item.getItemId() == R.id.menus_nuevo) {
-            nuevoRegistro(); // Asegúrate de que este método esté definido
-            return true;
-        }else if (item.getItemId() == R.id.ver_tareas) {
-            verCat(); // Asegúrate de que este método esté definido
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private void nuevoRegistro() {
         Intent intent = new Intent(this, MainActivity2.class);
         startActivity(intent);
+        finish();
 
     }
     private void verCat() {
@@ -83,7 +61,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void AgregarCat(View view) {
+        nuevoRegistro();
 
+    }
+
+    public void Buscraxcat(View view) {
+        verCat();
+    }
 }
 
 

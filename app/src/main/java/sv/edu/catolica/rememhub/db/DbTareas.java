@@ -58,12 +58,14 @@ public class DbTareas extends RememhubBD {
         return id;
     }
 
-
-
     public List<Tarea> obtenerTareasPorCategoria(int categoriaId) {
         List<Tarea> listaTareas = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TAREAS + " WHERE categoria_id = ?", new String[]{String.valueOf(categoriaId)});
+
+        // Ajuste: Asegúrate de consultar solo desde la tabla Tareas
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TAREAS +
+                        " WHERE categoria_id = ? AND estado = 0", // estado 0 para tareas activas, ajusta según corresponda
+                new String[]{String.valueOf(categoriaId)});
 
         if (cursor != null) {
             try {
@@ -72,23 +74,21 @@ public class DbTareas extends RememhubBD {
                         String nombre = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
                         String descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"));
                         String fechaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"));
-                        boolean completada = cursor.getInt(cursor.getColumnIndexOrThrow("completada")) == 1; // Ajusta según tu base de datos
-                        boolean eliminada = cursor.getInt(cursor.getColumnIndexOrThrow("eliminada")) == 1; // Recuperar "eliminada" desde la base de datos
+                        boolean completada = cursor.getInt(cursor.getColumnIndexOrThrow("estado")) == 1;
 
-                        // Crea la tarea con los parámetros requeridos
-                        Tarea tarea = new Tarea(nombre, "Categoria", fechaCumplimiento, completada); // Ajusta "Categoria" según corresponda
+                        // Crear tarea y agregarla a la lista
+                        Tarea tarea = new Tarea(nombre, "Categoria", fechaCumplimiento, completada);
                         tarea.setDescripcion(descripcion);
-                        tarea.setEliminada(eliminada); // Establece si está eliminada o no
-
                         listaTareas.add(tarea);
                     } while (cursor.moveToNext());
                 }
             } finally {
-                cursor.close(); // Asegúrate de cerrar el cursor
+                cursor.close();
             }
         }
         return listaTareas;
     }
+
 
     public void eliminarDiasRecordatorio(int tareaId) {
         SQLiteDatabase db = null;

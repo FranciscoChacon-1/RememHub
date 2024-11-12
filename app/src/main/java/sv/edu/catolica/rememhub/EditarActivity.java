@@ -2,17 +2,12 @@ package sv.edu.catolica.rememhub;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,7 +26,7 @@ public class EditarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ver);
+        setContentView(R.layout.activity_editar_cat);
         txtNombre = findViewById(R.id.editTxtConfiguracion);
         btnguardarcat = findViewById(R.id.btnguardarCat);
         fabEditar = findViewById(R.id.fabEditar);
@@ -57,33 +52,39 @@ public class EditarActivity extends AppCompatActivity {
         categorias = dbCategorias.verCategorias(id);
 
         if (categorias != null) {
-        txtNombre.setText(categorias.getNombre());
+            txtNombre.setText(categorias.getNombre());
 
-    }
-
-        btnguardarcat.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View v) {
-            if (!txtNombre.getText().toString().equals("")){
-                correcto = dbCategorias.editarCategoria(id, txtNombre.getText().toString());
-                if (correcto){
-                    Toast.makeText(EditarActivity.this, "Categoria Actualizada", Toast.LENGTH_SHORT).show();
-                    verRegistro();
-                }else{
-                    Toast.makeText(EditarActivity.this, "Error al Actualizar", Toast.LENGTH_SHORT).show();
-                }
-            }else{
-                Toast.makeText(EditarActivity.this, "El campo no puede estar vacio", Toast.LENGTH_SHORT).show();
-            }
         }
 
-    });
+        btnguardarcat.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (!txtNombre.getText().toString().equals("")){
+                    correcto = dbCategorias.editarCategoria(id, txtNombre.getText().toString());
+                    if (correcto){
+                        Toast.makeText(EditarActivity.this, "Categoria Actualizada", Toast.LENGTH_SHORT).show();
+                        verRegistro();
+                        // Regresar a MainActivity
+                        Intent intent = new Intent(EditarActivity.this, Categoria_activity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent); // Inicia Categoria
+                        finish(); // Cierra EditarActivity
 
-}
-private void verRegistro() {
-    Intent intent = new Intent(this, VerActivity.class);
-    intent.putExtra("ID", id);
-    startActivity(intent);
+                    }else{
+                        Toast.makeText(EditarActivity.this, "Error al Actualizar", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(EditarActivity.this, "El campo no puede estar vacio", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        });
+
+    }
+    private void verRegistro() {
+        Intent intent = new Intent(this, VerActivity.class);
+        intent.putExtra("ID", id);
+        startActivity(intent);
 
 
-}
+    }
 }

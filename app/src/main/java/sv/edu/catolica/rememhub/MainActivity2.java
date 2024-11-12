@@ -1,5 +1,6 @@
 package sv.edu.catolica.rememhub;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,13 @@ public class MainActivity2 extends AppCompatActivity {
                     if (id > 0) {
                         Toast.makeText(MainActivity2.this, "Categoría Agregada", Toast.LENGTH_SHORT).show();
                         limpiar(); // Método para limpiar el campo de entrada
+
+                        // Regresar a MainActivity
+                        Intent intent = new Intent(MainActivity2.this, Categoria_activity.class);
+                        startActivity(intent); // Inicia MainActivity
+
+
+                        finish(); // Cierra MainActivity2
                     } else {
                         Toast.makeText(MainActivity2.this, "Error al guardar la Categoría", Toast.LENGTH_SHORT).show();
                     }
