@@ -10,7 +10,7 @@
         android:id="@+id/tituloPapelera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Papelera"
+        android:text="@string/papelera"
         android:textSize="24sp"
         android:layout_marginBottom="16dp"
         android:gravity="center"/>
@@ -20,7 +20,7 @@
         android:id="@+id/textViewTareaPapelera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Detalles de la tarea"
+        android:text="@string/detalles_de_la_tarea"
         android:layout_marginBottom="16dp"
         android:gravity="center"/>
 
@@ -36,6 +36,6 @@
         android:id="@+id/btnVaciarPapelera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vaciar Papelera" />
+        android:text="@string/vaciar_papelera" />
 
 </LinearLayout>

@@ -10,19 +10,19 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nueva Categoria"
+        android:text="@string/nueva_categoria"
         android:textSize="20sp" />
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Escribe algo aquí"
+        android:hint="@string/escribe_algo_aqui_newcat"
         android:minHeight="48dp" />
 
     <Button
         android:id="@+id/btnguardarCat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar Categoria" />
+        android:text="@string/agregar_categoria" />
 </LinearLayout>

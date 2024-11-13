@@ -27,7 +27,7 @@
             android:id="@+id/taskTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tarea 1"
+            android:text="@string/tarea_1"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -37,7 +37,7 @@
             android:id="@+id/taskDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DD/MM/YYYY"
+            android:text="@string/dd_mm_yyyy_item"
             android:textSize="12sp"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
@@ -47,7 +47,7 @@
         android:id="@+id/taskCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Categoría 1"
+        android:text="@string/categor_a_1"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
         android:layout_marginStart="8dp" />

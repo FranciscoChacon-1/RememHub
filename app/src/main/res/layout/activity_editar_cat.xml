@@ -11,21 +11,21 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Configuracion"
+        android:text="@string/configuracion"
         android:textSize="20sp" />
 
     <EditText
         android:id="@+id/editTxtConfiguracion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Escribe algo aquí"
+        android:hint="@string/escribe_algo_aqu"
         android:minHeight="48dp" />
 
     <Button
         android:id="@+id/btnguardarCat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Editar Categoria" />
+        android:text="@string/editar_categoria" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabEditar"

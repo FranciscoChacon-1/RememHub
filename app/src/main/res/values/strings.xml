@@ -35,18 +35,18 @@
     <string name="txtbutton">Menú</string>
     <string name="mensaje">No hay tareas para la siguiente semana</string>
     <string name="texto">Esta semana</string>
-    <string name="todo2">todo2</string>
+    <string name="todo2" translatable="false">todo2</string>
     <string name="dias_de_recordatorio">Dias de Recordatorio</string>
-    <string name="todo3">todo3</string>
+    <string name="todo3" translatable="false">todo3</string>
     <string name="hora_de_recordatorio">Hora de recordatorio</string>
     <string name="configurar_recordatorio">Configurar Recordatorio</string>
-    <string name="todo">todo</string>
+    <string name="todo" translatable="false">todo</string>
     <string name="fecha_de_tarea">Fecha de tarea</string>
     <string name="descripcion_opcional">Descripcion(opcional)</string>
     <string name="titulo_de_la_tarea">Titulo de la tarea</string>
     <string name="a_adir_una_nueva_tarea">Añadir una nueva tarea</string>
-    <string name="todo4">TODO</string>
-    <string name="todo6">TODO</string>
+    <string name="todo4" translatable="false">TODO</string>
+    <string name="todo6" translatable="false">TODO</string>
     <string name="menu_nuevo">Nueva Categoria</string>
     <string name="txtFuturas">Tareas Futuras</string>
     <string name="mensajeFuturas">No tienes tareas programadas para fechas futuras.</string>
@@ -54,4 +54,43 @@
     <string name="mensajeExpiradas">No tienes tareas expiradas.</string>
     <string name="mensajeProximas">No hay tareas para esta semana.</string>
     <string name="txtProximas">Tareas Próximas</string>
+    <string name="detalle_de_tarea">Detalle de Tarea</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="guardar">Guardar</string>
+    <string name="hora">Hora</string>
+    <string name="escribe_algo_aqu">Escribe algo aquí</string>
+    <string name="editar_categoria">Editar Categoria</string>
+    <string name="configuracion">Configuracion</string>
+    <string name="fecha_historial">Fecha</string>
+    <string name="buscar_historial">Buscar</string>
+    <string name="men">MENÚ</string>
+    <string name="escribe_algo_aqui_newcat">Escribe algo aquí</string>
+    <string name="agregar_categoria">Agregar Categoria</string>
+    <string name="nueva_categoria">Nueva Categoria</string>
+    <string name="vaciar_papelera">Vaciar Papelera</string>
+    <string name="papelera">Papelera</string>
+    <string name="detalles_de_la_tarea">Detalles de la tarea</string>
+    <string name="todas_las_tareas">Todas las tareas</string>
+    <string name="filtrar_por_categor_a">Filtrar por categoría</string>
+    <string name="resumen">Resumen</string>
+    <string name="seleciones_una_opcion">Selecione una opcion</string>
+    <string name="cancelar_tarea">Cancelar</string>
+    <string name="guardar_tarea">Guardar</string>
+    <string name="hora_tarea">hora</string>
+    <string name="categorias">Categorias</string>
+    <string name="eliminar_tarea">Eliminar</string>
+    <string name="categor_a_x">Categoría X</string>
+    <string name="lun_mar_mi">Lun, Mar, Mié</string>
+    <string name="dd_mm_yyyy">DD, MM, YYYY</string>
+    <string name="tarea_x">Tarea X</string>
+    <string name="eliminar_tarea_papelera">Eliminar</string>
+    <string name="restaurar">Restaurar</string>
+    <string name="categor_a_x_papelera">Categoría X</string>
+    <string name="lun_mar_mi_papelera">Lun, Mar, Mié</string>
+    <string name="dd_mm_yyyy_papelera">DD, MM, YYYY</string>
+    <string name="tarea_x_papelera">Tarea X</string>
+    <string name="categor_a_1">Categoría 1</string>
+    <string name="dd_mm_yyyy_item">DD/MM/YYYY</string>
+    <string name="tarea_1">Tarea 1</string>
+    <string name="error_al_actualizar">Error al Actualizar</string>
 </resources>

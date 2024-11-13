@@ -70,7 +70,7 @@ public class EditarActivity extends AppCompatActivity {
                         finish(); // Cierra EditarActivity
 
                     }else{
-                        Toast.makeText(EditarActivity.this, "Error al Actualizar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditarActivity.this, R.string.error_al_actualizar, Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(EditarActivity.this, "El campo no puede estar vacio", Toast.LENGTH_SHORT).show();

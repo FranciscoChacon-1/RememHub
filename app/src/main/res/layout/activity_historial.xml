@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Buscar"
+            android:hint="@string/buscar_historial"
             android:textColor="@android:color/black"
             android:drawableStart="@android:drawable/ic_menu_search"
             android:padding="8dp"
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="Fecha"
+            android:text="@string/fecha_historial"
             android:drawableEnd="@android:drawable/ic_menu_today"
             android:layout_marginStart="8dp" />
     </LinearLayout>
