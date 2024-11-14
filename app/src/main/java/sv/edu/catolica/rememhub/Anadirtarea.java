@@ -1,5 +1,7 @@
 package sv.edu.catolica.rememhub;
 
+import static sv.edu.catolica.rememhub.R.string.error_al_guardar_tarea;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.*;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -30,6 +33,7 @@ public class Anadirtarea extends AppCompatActivity {
     private final String[] opcionesDias = {"Cada día", "Cada día (Lun - Vie)", "Cada día (Sáb - Dom)", "Otro..."};
     private RememhubBD dbHelper;
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,7 @@ public class Anadirtarea extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     private void configurarEventos() {
         spDias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -101,6 +106,7 @@ public class Anadirtarea extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     private void guardarTarea(View view) {
         if (!verificarPermisos()) return;
 
@@ -118,18 +124,17 @@ public class Anadirtarea extends AppCompatActivity {
 
         int categoriaId  = obtenerCategoriaIdPorNombre(spCategorias.getSelectedItem().toString());
         if (categoriaId == -1) {
-            Toast.makeText(this, "Error al obtener la categoría seleccionada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_al_obtener_la_categor_a_seleccionada, Toast.LENGTH_SHORT).show();
             return;
         }
         long tareaId = new DbTareas(this).insertarTarea(titulo, descripcion, obtenerFechaActual(), fechaCumplimiento, horaCumplimiento, horaRecordatorio, categoriaId);
 
         if (tareaId > 0) {
-            Toast.makeText(this, "Tarea guardada con ID: " + tareaId, Toast.LENGTH_SHORT).show();
             procesarDiasRecordatorio(tareaId, (String) spDias.getSelectedItem(), horaRecordatorio);
             programarNotificacionCumplimiento(tareaId, titulo, descripcion, fechaCumplimiento, horaCumplimiento);
             limpiarCampos();
         } else {
-            Toast.makeText(this, "Error al guardar tarea", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, error_al_guardar_tarea, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,28 +224,32 @@ public class Anadirtarea extends AppCompatActivity {
             dbTareas.insertarDiaRecordatorio((int) tareaId, dia); // Insertar cada día individualmente
         }
 
-        programarNotificacionRecordatorio(tareaId, txtTitulo.getText().toString(), txtDescripcion.getText().toString(), diasRecordatorio, horaRecordatorio);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            programarNotificacionRecordatorio(tareaId, txtTitulo.getText().toString(), txtDescripcion.getText().toString(), diasRecordatorio, horaRecordatorio);
+        }
 
     }
    // Recordatorios
-    @SuppressLint("ScheduleExactAlarm")
-    private void programarNotificacionRecordatorio(long tareaId, String titulo, String descripcion, List<String> diasRecordatorio, String horaRecordatorio) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        String[] horaArray = horaRecordatorio.split(":");
-        for (String dia : diasRecordatorio) {
+   @SuppressLint("ScheduleExactAlarm")
+   @RequiresApi(api = Build.VERSION_CODES.S) // Asegúrate de que tu método maneje la API 31+
+   private void programarNotificacionRecordatorio(long tareaId, String titulo, String descripcion, List<String> diasRecordatorio, String horaRecordatorio) {
+       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+       String[] horaArray = horaRecordatorio.split(":");
+       for (String dia : diasRecordatorio) {
+           Calendar calendar = obtenerFechaRecordatorio(dia, horaArray);
+           if (calendar.before(Calendar.getInstance())) calendar.add(Calendar.WEEK_OF_YEAR, 1);
 
-            Calendar calendar = obtenerFechaRecordatorio(dia, horaArray);
-            if (calendar.before(Calendar.getInstance())) calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            PendingIntent pendingIntent = crearPendingIntent(tareaId, titulo, descripcion, dia);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        }
-    }
+           // Crear el PendingIntent
+           PendingIntent pendingIntent = crearPendingIntent(tareaId, titulo, descripcion, dia);
+
+           alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+       }
+   }
 
     @SuppressLint("ScheduleExactAlarm")
+    @RequiresApi(api = Build.VERSION_CODES.S) // Asegúrate de que tu método maneje la API 31+
     private void programarNotificacionCumplimiento(long tareaId, String titulo, String descripcion, String fechaCumplimiento, String horaCumplimiento) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        // Parsear fecha y hora de cumplimiento
         Calendar fechaHoraCumplimiento = Calendar.getInstance();
         try {
             String[] fechaArray = fechaCumplimiento.split("-");
@@ -253,13 +262,14 @@ public class Anadirtarea extends AppCompatActivity {
                     Integer.parseInt(horaArray[1]),
                     0);
 
-            if (fechaHoraCumplimiento.after(Calendar.getInstance())) { // Verificar si la fecha está en el futuro
+            if (fechaHoraCumplimiento.after(Calendar.getInstance())) {
                 Intent intent = new Intent(this, NotificationReceiver.class);
                 intent.putExtra("tareaId", tareaId);
                 intent.putExtra("titulo", titulo);
                 intent.putExtra("descripcion", descripcion);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) tareaId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
+                // Crear el PendingIntent con
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) tareaId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 // Programar la notificación de cumplimiento
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, fechaHoraCumplimiento.getTimeInMillis(), pendingIntent);
@@ -287,6 +297,8 @@ public class Anadirtarea extends AppCompatActivity {
         intent.putExtra("tareaId", tareaId);
         intent.putExtra("titulo", titulo);
         intent.putExtra("descripcion", descripcion);
+
+        // Crear el PendingIntent
         return PendingIntent.getBroadcast(this, (int) (tareaId + getDayOfWeek(dia)), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 

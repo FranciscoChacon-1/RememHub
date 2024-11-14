@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
@@ -97,6 +98,7 @@ public class detalles_de_tarea extends AppCompatActivity {
             } else {
                 diasPersonalizados.remove(diasSemana[which]);
             }
+            actualizarTextoSpinner(); // Actualiza el texto del spinner cada vez que se selecciona un día
         });
 
         builder.setPositiveButton("Aceptar", (dialog, which) -> {
@@ -201,6 +203,19 @@ public class detalles_de_tarea extends AppCompatActivity {
                 diasPersonalizados.add(cursor.getString(0));
             }
         }
+        actualizarTextoSpinner(); // Actualiza el texto del spinner
+    }
+
+    private void actualizarSpinnerDias() {
+        ArrayAdapter<String> adapterDias = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opciones);
+        adapterDias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spDias.setAdapter(adapterDias);
+
+        // Verifica si hay días personalizados
+        if (!diasPersonalizados.isEmpty()) {
+            // Si hay días personalizados, selecciona "Otro..."
+            spDias.setSelection(adapterDias.getPosition("Otro..."));
+        }
     }
 
     private void seleccionarCategoria(int categoriaId) {
@@ -211,34 +226,28 @@ public class detalles_de_tarea extends AppCompatActivity {
     private void editarTarea() {
         int categoriaId = obtenerCategoriaIdPorNombre(spCategoria.getSelectedItem().toString());
         if (categoriaId == -1) {
-            Toast.makeText(this, error_al_obtener_la_categor_a_seleccionada, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al obtener la categoría seleccionada", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String fechaCumplimientoStr = etFecha.getText().toString();
         String horaCumplimientoStr = etHora.getText().toString();
+        String horaRecordatorioStr = etHoraRecordatorio.getText().toString();
+
         if (!validarFechaHora(fechaCumplimientoStr, horaCumplimientoStr)) return;
 
+        // Cancelar alarmas antiguas
+        gestionarAlarmas();
+
+        // Crear ContentValues para la actualización de la tarea
         ContentValues values = crearContentValues(categoriaId, fechaCumplimientoStr, horaCumplimientoStr);
         actualizarTareaEnDB(values);
 
-        Log.d("editarTarea", "Datos de la tarea actualizados en la base de datos para ID: " + selectedTareaId);
+        // Reprogramar alarmas con los nuevos datos
+        configurarAlarmaCumplimiento();
+        configurarAlarmaRecordatorio();
 
-        // Cancelar y reprogramar alarmas después de editar
-        gestionarAlarmas();
-
-        diasPersonalizados.clear();
-        String selectedOption = (String) spDias.getSelectedItem();
-        List<String> diasRecordatorio = obtenerDiasRecordatorio(selectedOption);
-        if (diasRecordatorio.isEmpty()) {
-            Toast.makeText(this,  R.string.selecciona_al_menos_un_d_a, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // Actualizar días de recordatorio en la base de datos
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        actualizarDiasRecordatorio(db, diasRecordatorio); // Actualiza la base de datos con los nuevos días
-        Log.d("editarTarea", "Días de recordatorio actualizados: " + diasRecordatorio);
-        Toast.makeText(this, tarea_editada_con_xito, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Tarea editada con éxito", Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -261,13 +270,12 @@ public class detalles_de_tarea extends AppCompatActivity {
     }
 
     private void gestionarAlarmas() {
-        Log.d("gestionarAlarmas", "Iniciando la reprogramación de alarmas para la tarea ID: " + selectedTareaId);
+        // Cancelar alarmas antiguas
         DbTareas dbTareas = new DbTareas(this);
         dbTareas.eliminarAlarmaTarea(selectedTareaId, this); // Eliminar alarmas antiguas si existen.
+
+        // Guardar nuevas alarmas
         dbTareas.guardarAlarmas(selectedTareaId, diasPersonalizados, etHoraRecordatorio.getText().toString());
-        Log.d("gestionarAlarmas", "Alarmas guardadas en base de datos para días personalizados: " + diasPersonalizados);
-        configurarAlarmaCumplimiento();
-        configurarAlarmaRecordatorio();
     }
 
 
@@ -287,6 +295,16 @@ public class detalles_de_tarea extends AppCompatActivity {
         return true;
     }
 
+    private void actualizarTextoSpinner() {
+        if (!diasPersonalizados.isEmpty() && spDias.getSelectedItem().equals("Otro...")) {
+            String textoSpinner = String.join(", ", diasPersonalizados);
+            View v = spDias.getSelectedView();
+            if (v instanceof TextView) {
+                ((TextView) v).setText(textoSpinner);
+            }
+        }
+    }
+
     private void actualizarDiasRecordatorio(SQLiteDatabase db, List<String> diasRecordatorio) {
         // Eliminar días antiguos
         db.delete("DiasRecordatorio", "tarea_id = ?", new String[]{String.valueOf(selectedTareaId)});
@@ -302,7 +320,6 @@ public class detalles_de_tarea extends AppCompatActivity {
         if (diasRecordatorio.isEmpty()) {
             Log.d("actualizarDiasRecordatorio", "La lista de días de recordatorio está vacía.");
         } else {
-            // Guardar los días de recordatorio en la base de datos o hacer lo que corresponda.
             Log.d("actualizarDiasRecordatorio", "Días actualizados: " + diasRecordatorio);
         }
     }
@@ -329,7 +346,6 @@ public class detalles_de_tarea extends AppCompatActivity {
 
     @SuppressLint("ScheduleExactAlarm")
     private void configurarAlarmaCumplimiento() {
-        // Aquí configuramos la alarma de cumplimiento (notificación final)
         Calendar fechaHoraCumplimiento = obtenerFechaHora(etFecha.getText().toString(), etHora.getText().toString());
         if (fechaHoraCumplimiento != null) {
             Intent intentCumplimiento = new Intent(this, NotificationReceiver.class);
@@ -337,7 +353,7 @@ public class detalles_de_tarea extends AppCompatActivity {
             intentCumplimiento.putExtra("titulo", etTituloTarea.getText().toString());
 
             PendingIntent pendingIntentCumplimiento = PendingIntent.getBroadcast(
-                    this, selectedTareaId, intentCumplimiento, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    this, selectedTareaId, intentCumplimiento, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, fechaHoraCumplimiento.getTimeInMillis(), pendingIntentCumplimiento);
@@ -383,7 +399,7 @@ public class detalles_de_tarea extends AppCompatActivity {
 
             PendingIntent pendingIntentRecordatorio = PendingIntent.getBroadcast(
                     this, selectedTareaId + dia.hashCode(), intentRecordatorio,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE
             );
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

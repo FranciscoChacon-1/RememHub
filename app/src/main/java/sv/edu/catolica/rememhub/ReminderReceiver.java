@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -38,14 +39,19 @@ public class ReminderReceiver extends BroadcastReceiver {
                     "id = ?", new String[]{String.valueOf(tareaId)},
                     null, null, null);
 
-            if (cursor != null && cursor.moveToFirst()) {
-                @SuppressLint("Range") int estado = cursor.getInt(cursor.getColumnIndex("estado"));
-                @SuppressLint("Range") int papelera = cursor.getInt(cursor.getColumnIndex("papelera"));
+            // Verificar si la tarea existe
+            if (cursor == null || !cursor.moveToFirst()) {
+                Log.d("ReminderReceiver", "La tarea con ID " + tareaId + " no existe. Cancelando notificación.");
+                return; // Salir si la tarea no existe
+            }
 
-                if (estado == 1 || papelera == 1) {
-                    cancelarNotificacion(context, tareaId);
-                    return;
-                }
+            @SuppressLint("Range") int estado = cursor.getInt(cursor.getColumnIndex("estado"));
+            @SuppressLint("Range") int papelera = cursor.getInt(cursor.getColumnIndex("papelera"));
+
+            // Cancelar la notificación si la tarea está completada o en papelera
+            if (estado == 1 || papelera == 1) {
+                cancelarNotificacion(context, tareaId);
+                return; // Salir si la tarea está completada o en papelera
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -107,4 +107,6 @@
     <string name="tarea_restaurada">Tarea restaurada</string>
     <string name="tarea_eliminada_permanentemente">Tarea eliminada permanentemente</string>
     <string name="categoria_eliminada">Categoria Eliminada</string>
+    <string name="tarea_guardada_con_id">"Tarea guardada con ID: "</string>
+    <string name="error_al_guardar_tarea">Error al guardar tarea</string>
 </resources>

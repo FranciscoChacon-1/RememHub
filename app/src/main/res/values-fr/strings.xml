@@ -103,4 +103,6 @@
     <string name="tarea_restaurada">Tâche restaurée</string>
     <string name="tarea_eliminada_permanentemente">Tâche définitivement supprimée</string>
     <string name="categoria_eliminada">Catégorie éliminée</string>
+    <string name="tarea_guardada_con_id">"Tâche sauvegardée avec ID : "</string>
+    <string name="error_al_guardar_tarea">Erreur d\'enregistrement de la tâche</string>
 </resources>

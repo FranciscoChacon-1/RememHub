@@ -103,4 +103,6 @@
     <string name="tarea_restaurada">Task restored</string>
     <string name="tarea_eliminada_permanentemente">Task permanently deleted</string>
     <string name="categoria_eliminada">Category Eliminated</string>
+    <string name="tarea_guardada_con_id">"Task saved with ID: "</string>
+    <string name="error_al_guardar_tarea">"Task saved with ID: "</string>
 </resources>

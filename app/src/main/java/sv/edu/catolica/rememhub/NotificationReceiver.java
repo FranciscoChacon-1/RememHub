@@ -28,46 +28,34 @@ public class NotificationReceiver extends BroadcastReceiver {
         String tareaTitulo = intent.getStringExtra("titulo");
         String tareaDescripcion = intent.getStringExtra("descripcion");
         long tareaId = intent.getLongExtra("tareaId", -1);
-        Log.d("Notifinal", "Notificacion final recibida: "+tareaTitulo);
+        Log.d("Notifinal", "Notificacion final recibida: " + tareaTitulo);
+
         // Verificar el estado de la tarea
         RememhubBD dbHelper = new RememhubBD(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try {
             // Consultar estado y papelera de la tarea
-            Log.d("Notifinal", "Notificacion: "+tareaTitulo+" Entro al try catch");
             Cursor cursor = db.query("Tareas", new String[]{"estado", "papelera"},
                     "id = ?", new String[]{String.valueOf(tareaId)},
                     null, null, null);
-            String cursorprueba = "";
-            if(cursor!= null){
-                cursorprueba = "true";
-            }else{
-                cursorprueba ="nulo";
-            }
-            Log.d("Notifinal", "Notificacion: "+tareaTitulo+" cursor: "+cursorprueba);
-            String movetofirst = "";
-            if(cursor.moveToFirst()){
-                movetofirst="true";
-            }else{
-                movetofirst="false";
-            }
-            Log.d("Notifinal", "Notificacion: "+tareaTitulo+" cursor.movetoTofirst: "+movetofirst);
-            if (cursor != null && cursor.moveToFirst()) {
-                Log.d("Notifinal", "Notificacion: "+tareaTitulo+"Entro al primer if");
-                @SuppressLint("Range") int estado = cursor.getInt(cursor.getColumnIndex("estado"));
-                @SuppressLint("Range") int papelera = cursor.getInt(cursor.getColumnIndex("papelera"));
 
-                if (estado == 0 && papelera == 0) {  // Si no está completada ni en papelera
-                    Log.d("Notifinal", "Notificacion: "+tareaTitulo+" Entro al segundo if");
-                    ContentValues values = new ContentValues();
-                    values.put("estado", 1);
-                    Log.d("Notifinal", "Estado de "+tareaTitulo+" cambiado a : "+ values);
-                    db.update("Tareas", values, "id = ?", new String[]{String.valueOf(tareaId)});
+            // Verificar si la tarea existe
+            if (cursor == null || !cursor.moveToFirst()) {
+                Log.d("Notifinal", "La tarea con ID " + tareaId + " no existe. No se mostrará la notificación.");
+                return; // Salir si la tarea no existe
+            }
 
-                    cancelarNotificacionesFinales(context, tareaId);
-                    cancelarNotificacionesRecurrentes(context, tareaId);
-                }
+            @SuppressLint("Range") int estado = cursor.getInt(cursor.getColumnIndex("estado"));
+            @SuppressLint("Range") int papelera = cursor.getInt(cursor.getColumnIndex("papelera"));
+
+            // Verifica si la tarea está completada o en papelera
+            if (estado == 1 || papelera == 1) {
+                Log.d("Notifinal", "Notificacion: " + tareaTitulo + " no se mostrará porque está completada o en papelera.");
+                return; // Salir si la tarea está completada o en papelera
+            }
+
+            if (cursor != null) {
                 cursor.close();
             }
         } catch (Exception e) {
@@ -76,10 +64,10 @@ public class NotificationReceiver extends BroadcastReceiver {
             if (db != null) db.close();
         }
 
-        mostrarNotificacionFinal(context, tareaTitulo, tareaDescripcion);
+        mostrarNotificacionFinal(context, tareaTitulo, tareaDescripcion, tareaId);
     }
 
-    private void mostrarNotificacionFinal(Context context, String titulo, String descripcion) {
+    private void mostrarNotificacionFinal(Context context, String titulo, String descripcion, long tareaId) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Cumplimiento de Tarea";
@@ -98,12 +86,21 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .build();
 
+        // Aquí actualizamos el estado de la tarea a 1
+        RememhubBD dbHelper = new RememhubBD(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put("estado", 1); // Cambiar el estado a completada
 
-        values.put("estado", 1);
-        Log.d("Notifinal", "MOSTRARNOTIFICACIONFINALSe recibio y cambio el estado a: "+values+" de noti: "+ titulo);
+        // Ahora puedes usar tareaId directamente
+        if (tareaId != -1) {
+            db.update("Tareas", values, "id = ?", new String[]{String.valueOf(tareaId)});
+            Log.d("Notifinal", "Estado de la tarea con ID " + tareaId + " actualizado a 1.");
+        }
 
-        int notificationId = (int) System.currentTimeMillis();
+        // Generar un ID único para la notificación basada en tareaId para que no se duplique
+        int notificationId = (int) (tareaId); // Mantenerlo único por tarea
+
         notificationManager.notify(notificationId, notification);
     }
 
@@ -241,3 +238,4 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
 }
+
