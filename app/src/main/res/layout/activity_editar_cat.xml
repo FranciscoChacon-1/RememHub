@@ -6,45 +6,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".VerActivity">
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/configuracion"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_marginBottom="16dp"/>
 
     <EditText
         android:id="@+id/editTxtConfiguracion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:hint="@string/escribe_algo_aqu"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        tools:ignore="Autofill,TextFields,TextContrastCheck,VisualLintTextFieldSize" />
 
     <Button
         android:id="@+id/btnguardarCat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/editar_categoria" />
+        android:text="@string/editar_categoria"
+        android:layout_marginBottom="16dp"
+        tools:ignore="VisualLintButtonSize" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabEditar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         app:backgroundTint="#8BC34A"
         app:srcCompat="@android:drawable/ic_menu_edit"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription,KeyboardInaccessibleWidget,SpeakableTextPresentCheck,ImageContrastCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabElminar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="96dp"
         android:clickable="true"
         app:backgroundTint="#DB0A0A"
         app:srcCompat="@android:drawable/ic_menu_delete"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription,KeyboardInaccessibleWidget,SpeakableTextPresentCheck"/>
 
 </LinearLayout>

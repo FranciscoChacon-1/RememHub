@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     android:background="@color/gray"
-    android:layout_margin="10dp"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     tools:context=".activity_resumen">
 
     <!-- Título -->
@@ -16,51 +16,68 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="@string/resumen"
-        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginTop="-50dp"
-        android:layout_marginBottom="16dp" />
+        tools:ignore="TextContrastCheck" />
 
     <!-- Sección de Todas las Tareas -->
     <TextView
         android:id="@+id/all_tasks_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:text="@string/todas_las_tareas"
-        android:textSize="28sp"
-        android:layout_marginBottom="8dp" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="TextContrastCheck" />
 
     <!-- Gráfica 1 (Todas las tareas) -->
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChartAllTasks"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="Gráfica de todas las tareas" />
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="Gráfica de todas las tareas"
+        tools:ignore="HardcodedText" />
 
     <!-- Spinner para Filtrar por Categoría -->
     <TextView
         android:id="@+id/filter_by_category_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/filtrar_por_categor_a"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:layout_marginBottom="8dp" />
+        tools:ignore="TextContrastCheck" />
 
     <Spinner
         android:id="@+id/categorySpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:minHeight="48dp" />
+        android:layout_marginBottom="20dp"
+        android:minHeight="40dp"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <!-- Gráfica 2 (Por categoría) -->
+    <TextView
+        android:id="@+id/by_category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChartByCategory"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Gráfica por categoría" />
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:contentDescription="Gráfica por categoría"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

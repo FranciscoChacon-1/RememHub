@@ -21,7 +21,8 @@
         <!-- Receiver para eventos de arranque, reemplazo y alarmas -->
         <receiver android:name=".ReminderReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
@@ -35,25 +36,26 @@
             android:exported="false" />
 
         <!-- Declaración de actividades -->
-        <activity android:name=".tareas_pendientes_inicio" android:exported="true">
+        <activity android:name=".tareas_pendientes_inicio" android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".detalles_de_tarea" />
-        <activity android:name=".activity_historial" />
-        <activity android:name=".menu_inicio" android:exported="true" />
-        <activity android:name=".PapeleraActivity" android:exported="false" />
-        <activity android:name=".VerTareasxCategorias" android:exported="false" />
-        <activity android:name=".Categoria_activity" android:exported="false" />
-        <activity android:name=".activity_resumen" android:exported="false" />
-        <activity android:name=".activity_configuracion" android:exported="false" />
-        <activity android:name=".Añadirtarea" android:exported="true" android:parentActivityName=".Categoria_activity" />
-        <activity android:name=".VerActivity" android:exported="false" android:parentActivityName=".Categoria_activity" />
-        <activity android:name=".NuevaCategoria" android:exported="false" android:parentActivityName=".Categoria_activity" />
-        <activity android:name=".EditarActivity" android:exported="false" android:parentActivityName=".Categoria_activity" />
+        <activity android:name=".detalles_de_tarea" android:screenOrientation="portrait"/>
+        <activity android:name=".activity_historial" android:screenOrientation="portrait" />
+        <activity android:name=".menu_inicio" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".PapeleraActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".VerTareasxCategorias" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".Categoria_activity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".activity_resumen" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".activity_configuracion" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".Añadirtarea" android:exported="true" android:parentActivityName=".Categoria_activity" android:screenOrientation="portrait"/>
+        <activity android:name=".VerActivity" android:exported="false" android:parentActivityName=".Categoria_activity" android:screenOrientation="portrait"/>
+        <activity android:name=".NuevaCategoria" android:exported="false" android:parentActivityName=".Categoria_activity" android:screenOrientation="portrait"/>
+        <activity android:name=".EditarActivity" android:exported="false" android:parentActivityName=".Categoria_activity" android:screenOrientation="portrait"/>
 
         <!-- Meta-data para PARENT_ACTIVITY -->
         <meta-data
