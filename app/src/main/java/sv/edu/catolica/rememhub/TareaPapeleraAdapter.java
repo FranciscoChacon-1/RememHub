@@ -51,8 +51,8 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
         // Acción para eliminar permanentemente la tarea
         holder.btnEliminar.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
-                    .setTitle("Eliminar permanentemente")
-                    .setMessage("¿Seguro que quieres eliminar esta tarea permanentemente?")
+                    .setTitle(R.string.eliminar_permanentemente)
+                    .setMessage(R.string.seguro_que_quieres_eliminar_esta_tarea_permanentemente)
                     .setPositiveButton("Sí", (dialog, which) -> {
                         tareaDataAccess.eliminarTareaConRecordatorio(tarea.getId());  // Elimina de la BD y los recordatorios
                         listaTareas.remove(position);                    // Remueve de la lista visual

@@ -105,4 +105,21 @@
     <string name="categoria_eliminada">Catégorie éliminée</string>
     <string name="tarea_guardada_con_id">"Tâche sauvegardée avec ID : "</string>
     <string name="error_al_guardar_tarea">Erreur d\'enregistrement de la tâche</string>
+    <string name="por_favor_completa_todos_los_campos">Veuillez remplir tous les champs</string>
+    <string name="error_en_el_formato_de_fecha_o_hora">Erreur dans le format de la date ou de l\'heure</string>
+    <string name="error_al_programar_notificaci_n_de_cumplimiento">Erreur dans la programmation de la notification de conformité</string>
+    <string name="selecciona_los_d_as_de_recordatorio">Sélectionner les jours de rappel</string>
+    <string name="aceptar">Accepter</string>
+    <string name="eliminar_permanentemente">Supprimer définitivement</string>
+    <string name="seguro_que_quieres_eliminar_esta_tarea_permanentemente">Êtes-vous sûr de vouloir supprimer cette tâche de façon permanente ?</string>
+    <string name="recordatorio_final_de_tarea">Rappel de la tâche finale : ?</string>
+    <string name="desea_eliminar_esta_categoria">Vous souhaitez supprimer cette catégorie</string>
+    <string name="si">Oui</string>
+    <string name="no">NON</string>
+    <string name="est_seguro_de_que_desea_mover_esta_tarea_a_la_papelera">Êtes-vous sûr de vouloir mettre cette tâche à la poubelle ?</string>
+    <string name="confirmaci_n">Confirmation</string>
+    <string name="sin_categor_a">Non classé</string>
+    <string name="la_tarea_se_ha_movido_a_la_papelera">La tâche a été déplacée dans la corbeille.</string>
+    <string name="error_al_mover_la_tarea">Erreur lors du déplacement de la tâche</string>
+    <string name="tarea_guardada_con_exito">La tâche a été sauvegardée avec succès.</string>
 </resources>

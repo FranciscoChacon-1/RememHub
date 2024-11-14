@@ -1,6 +1,9 @@
 package sv.edu.catolica.rememhub;
 
 import static sv.edu.catolica.rememhub.R.string.error_al_guardar_tarea;
+import static sv.edu.catolica.rememhub.R.string.error_al_programar_notificaci_n_de_cumplimiento;
+import static sv.edu.catolica.rememhub.R.string.error_en_el_formato_de_fecha_o_hora;
+import static sv.edu.catolica.rememhub.R.string.por_favor_completa_todos_los_campos;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -132,6 +135,7 @@ public class Anadirtarea extends AppCompatActivity {
         if (tareaId > 0) {
             procesarDiasRecordatorio(tareaId, (String) spDias.getSelectedItem(), horaRecordatorio);
             programarNotificacionCumplimiento(tareaId, titulo, descripcion, fechaCumplimiento, horaCumplimiento);
+            Toast.makeText(this, R.string.tarea_guardada_con_exito, Toast.LENGTH_SHORT).show();
             limpiarCampos();
         } else {
             Toast.makeText(this, error_al_guardar_tarea, Toast.LENGTH_SHORT).show();
@@ -161,7 +165,7 @@ public class Anadirtarea extends AppCompatActivity {
     private boolean camposIncompletos(String... campos) {
         for (String campo : campos) {
             if (campo.isEmpty()) {
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, por_favor_completa_todos_los_campos, Toast.LENGTH_SHORT).show();
                 return true;
             }
         }
@@ -183,11 +187,11 @@ public class Anadirtarea extends AppCompatActivity {
             );
 
             if (fechaHoraCumplimiento.before(Calendar.getInstance())) {
-                Toast.makeText(this, "La fecha de cumplimiento no puede ser anterior a la fecha actual", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.la_fecha_de_cumplimiento_no_puede_ser_anterior_a_la_fecha_actual, Toast.LENGTH_SHORT).show();
                 return true; // Detener el proceso si la fecha de cumplimiento es anterior a la actual
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Error en el formato de fecha o hora", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, error_en_el_formato_de_fecha_o_hora, Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -231,20 +235,24 @@ public class Anadirtarea extends AppCompatActivity {
     }
    // Recordatorios
    @SuppressLint("ScheduleExactAlarm")
-   @RequiresApi(api = Build.VERSION_CODES.S) // Asegúrate de que tu método maneje la API 31+
+   @RequiresApi(api = Build.VERSION_CODES.S)
    private void programarNotificacionRecordatorio(long tareaId, String titulo, String descripcion, List<String> diasRecordatorio, String horaRecordatorio) {
        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
        String[] horaArray = horaRecordatorio.split(":");
+
        for (String dia : diasRecordatorio) {
            Calendar calendar = obtenerFechaRecordatorio(dia, horaArray);
-           if (calendar.before(Calendar.getInstance())) calendar.add(Calendar.WEEK_OF_YEAR, 1);
 
-           // Crear el PendingIntent
+           // Asegurarse de que la notificación esté programada solo para el día correcto
+           if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+               calendar.add(Calendar.WEEK_OF_YEAR, 1);
+           }
+
            PendingIntent pendingIntent = crearPendingIntent(tareaId, titulo, descripcion, dia);
-
            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
        }
    }
+
 
     @SuppressLint("ScheduleExactAlarm")
     @RequiresApi(api = Build.VERSION_CODES.S) // Asegúrate de que tu método maneje la API 31+
@@ -277,7 +285,7 @@ public class Anadirtarea extends AppCompatActivity {
                 Log.e("Fechacump", "FechaHoracumplimiento: " + fechaHoraCumplimiento.getTimeInMillis());
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Error al programar notificación de cumplimiento", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, error_al_programar_notificaci_n_de_cumplimiento, Toast.LENGTH_SHORT).show();
             Log.e("Error", "Error en formato de fecha o hora para cumplimiento: " + e.getMessage());
         }
     }
@@ -289,8 +297,13 @@ public class Anadirtarea extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaArray[0]));
         calendar.set(Calendar.MINUTE, Integer.parseInt(horaArray[1]));
         calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.WEEK_OF_YEAR, 1);
+        }
         return calendar;
     }
+
 
     private PendingIntent crearPendingIntent(long tareaId, String titulo, String descripcion, String dia) {
         Intent intent = new Intent(this, ReminderReceiver.class);
@@ -334,8 +347,8 @@ public class Anadirtarea extends AppCompatActivity {
                     if (isChecked) diasPersonalizados.add(dias[which]);
                     else diasPersonalizados.remove(dias[which]);
                 })
-                .setPositiveButton("Aceptar", (dialog, which) -> actualizarTextoSpinner())
-                .setNegativeButton("Cancelar", null)
+                .setPositiveButton(R.string.aceptar, (dialog, which) -> actualizarTextoSpinner())
+                .setNegativeButton(R.string.cancelar, null)
                 .show();
     }
 

@@ -53,12 +53,17 @@ public class PapeleraActivity extends AppCompatActivity {
 
     private void vaciarPapelera() {
         // Llama al método en TareaDataAccess para eliminar todas las tareas en papelera y sus días de recordatorio
-        tareaDataAccess.eliminarTareasPapelera();
-        cargarTareasPapelera(); // Recarga la lista después de vaciar la papelera
-        Toast.makeText(this, papelera_vaciada, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, menu_inicio.class));
-        finish();
+        try {
+            tareaDataAccess.eliminarTareasPapelera();
+            cargarTareasPapelera(); // Recarga la lista después de vaciar la papelera
+            Toast.makeText(this, papelera_vaciada, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, menu_inicio.class));
+            finish();
 
+
+        } catch (Exception e) {
+            Toast.makeText(this, R.string.la_papelera_est_vac_a, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

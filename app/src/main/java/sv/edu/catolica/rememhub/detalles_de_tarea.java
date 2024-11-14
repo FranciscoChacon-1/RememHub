@@ -90,7 +90,7 @@ public class detalles_de_tarea extends AppCompatActivity {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Selecciona los días de recordatorio");
+        builder.setTitle(R.string.selecciona_los_d_as_de_recordatorio);
 
         builder.setMultiChoiceItems(diasSemana, diasSeleccionados, (dialog, which, isChecked) -> {
             if (isChecked) {
@@ -101,7 +101,7 @@ public class detalles_de_tarea extends AppCompatActivity {
             actualizarTextoSpinner(); // Actualiza el texto del spinner cada vez que se selecciona un día
         });
 
-        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+        builder.setPositiveButton(R.string.aceptar, (dialog, which) -> {
             if (diasPersonalizados.isEmpty()) {
                 Toast.makeText(this, R.string.selecciona_al_menos_un_d_a, Toast.LENGTH_SHORT).show();
             } else {
@@ -109,7 +109,7 @@ public class detalles_de_tarea extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss());
         builder.show();
     }
 

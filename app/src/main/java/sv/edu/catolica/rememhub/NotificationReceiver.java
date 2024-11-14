@@ -79,7 +79,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("Recordatorio Final de Tarea: " + titulo)
+                .setContentTitle(context.getString(R.string.recordatorio_final_de_tarea) + titulo)
                 .setContentText(descripcion)
                 .setSmallIcon(R.drawable.icon_noti)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

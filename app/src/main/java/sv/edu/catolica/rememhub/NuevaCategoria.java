@@ -38,11 +38,9 @@ public class NuevaCategoria extends AppCompatActivity {
 
         btnguardarcat.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Obtener el texto del campo de entrada
+
                 String nombreCategoria = txtNombre.getText().toString().trim();
 
-                // Validar si el campo está vacío o contiene solo espacios
-                // Mostrar un mensaje de error si el campo está vacío
                 if (nombreCategoria.isEmpty())
                     Toast.makeText(NuevaCategoria.this, R.string.el_nombre_de_la_categor_a_no_puede_estar_vac_o, Toast.LENGTH_SHORT).show();
                 else {
@@ -54,7 +52,6 @@ public class NuevaCategoria extends AppCompatActivity {
                         Toast.makeText(NuevaCategoria.this, categor_a_agregada, Toast.LENGTH_SHORT).show();
                         limpiar(); // Método para limpiar el campo de entrada
 
-                        // Regresar a MainActivity
                         Intent intent = new Intent(NuevaCategoria.this, Categoria_activity.class);
                         startActivity(intent); // Inicia MainActivity
 

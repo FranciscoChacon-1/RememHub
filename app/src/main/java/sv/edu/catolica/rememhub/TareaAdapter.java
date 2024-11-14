@@ -60,7 +60,7 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
 
         public void bind(Tarea tarea, int position) {
             textTitulo.setText(tarea.getTitulo());
-            textCategoria.setText(tarea.getCategoria() != null ? tarea.getCategoria() : "Sin categoría");
+            textCategoria.setText(tarea.getCategoria() != null ? tarea.getCategoria() : context.getString(R.string.sin_categor_a));
             textFecha.setText(tarea.getFecha());
             checkBox.setChecked(tarea.isCompletada());
             checkBox.setEnabled(false);
@@ -72,10 +72,10 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
     // Muestra un cuadro de diálogo de confirmación antes de eliminar una tarea
     private void mostrarDialogoConfirmacion(Tarea tarea, int position) {
         new AlertDialog.Builder(context)
-                .setTitle("Confirmación")
-                .setMessage("¿Está seguro de que desea mover esta tarea a la papelera?")
-                .setPositiveButton("Sí", (dialog, which) -> moverTareaAPapelera(tarea, position))
-                .setNegativeButton("No", null)
+                .setTitle(R.string.confirmaci_n)
+                .setMessage(R.string.est_seguro_de_que_desea_mover_esta_tarea_a_la_papelera)
+                .setPositiveButton(R.string.si, (dialog, which) -> moverTareaAPapelera(tarea, position))
+                .setNegativeButton(R.string.no, null)
                 .show();
     }
 
@@ -93,9 +93,9 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
                 if (isMoved) {
                     listaTareas.remove(position);
                     notifyItemRemoved(position);
-                    Toast.makeText(context, "La tarea se ha movido a la papelera", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.la_tarea_se_ha_movido_a_la_papelera, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Error al mover la tarea", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.error_al_mover_la_tarea, Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute();

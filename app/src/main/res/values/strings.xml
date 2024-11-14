@@ -109,4 +109,22 @@
     <string name="categoria_eliminada">Categoria Eliminada</string>
     <string name="tarea_guardada_con_id">"Tarea guardada con ID: "</string>
     <string name="error_al_guardar_tarea">Error al guardar tarea</string>
+    <string name="por_favor_completa_todos_los_campos">Por favor, completa todos los campos</string>
+    <string name="error_en_el_formato_de_fecha_o_hora">Error en el formato de fecha o hora</string>
+    <string name="error_al_programar_notificaci_n_de_cumplimiento">Error al programar notificación de cumplimiento</string>
+    <string name="selecciona_los_d_as_de_recordatorio">Selecciona los días de recordatorio</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="eliminar_permanentemente">Eliminar permanentemente</string>
+    <string name="seguro_que_quieres_eliminar_esta_tarea_permanentemente">¿Seguro que quieres eliminar esta tarea permanentemente?</string>
+    <string name="recordatorio_final_de_tarea">"Recordatorio Final de Tarea: "</string>
+    <string name="desea_eliminar_esta_categoria">Desea Eliminar esta Categoria</string>
+    <string name="si">Si</string>
+    <string name="no">NO</string>
+    <string name="est_seguro_de_que_desea_mover_esta_tarea_a_la_papelera">¿Está seguro de que desea mover esta tarea a la papelera?</string>
+    <string name="confirmaci_n">Confirmación</string>
+    <string name="sin_categor_a">Sin categoría</string>
+    <string name="la_tarea_se_ha_movido_a_la_papelera">La tarea se ha movido a la papelera</string>
+    <string name="error_al_mover_la_tarea">Error al mover la tarea</string>
+    <string name="tarea_guardada_con_exito">Tarea guardada con exito.</string>
+
 </resources>

@@ -105,4 +105,21 @@
     <string name="categoria_eliminada">Category Eliminated</string>
     <string name="tarea_guardada_con_id">"Task saved with ID: "</string>
     <string name="error_al_guardar_tarea">"Task saved with ID: "</string>
+    <string name="por_favor_completa_todos_los_campos">Please complete all fields</string>
+    <string name="error_en_el_formato_de_fecha_o_hora">Error in date or time format</string>
+    <string name="error_al_programar_notificaci_n_de_cumplimiento">Error when programming compliance notification</string>
+    <string name="selecciona_los_d_as_de_recordatorio">Select reminder days</string>
+    <string name="aceptar">Accept</string>
+    <string name="eliminar_permanentemente">Permanently delete</string>
+    <string name="seguro_que_quieres_eliminar_esta_tarea_permanentemente">Are you sure you want to remove this task permanently?</string>
+    <string name="recordatorio_final_de_tarea">"Final Task Reminder: "</string>
+    <string name="desea_eliminar_esta_categoria">Delete this Category</string>
+    <string name="si">Yes</string>
+    <string name="no">NO</string>
+    <string name="est_seguro_de_que_desea_mover_esta_tarea_a_la_papelera">Are you sure you want to move this task to the trash?</string>
+    <string name="confirmaci_n">Confirmation</string>
+    <string name="sin_categor_a">No category</string>
+    <string name="la_tarea_se_ha_movido_a_la_papelera">The task has been moved to the recycle garbage can</string>
+    <string name="error_al_mover_la_tarea">Error when moving the task</string>
+    <string name="tarea_guardada_con_exito">Task successfully saved.</string>
 </resources>

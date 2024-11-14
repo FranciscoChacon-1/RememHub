@@ -1,6 +1,7 @@
 package sv.edu.catolica.rememhub;
 
 import static sv.edu.catolica.rememhub.R.string.categoria_eliminada;
+import static sv.edu.catolica.rememhub.R.string.desea_eliminar_esta_categoria;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -80,8 +81,8 @@ public class VerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(VerActivity.this);
-                builder.setMessage("Desea Eliminar esta Categoria")
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                builder.setMessage(desea_eliminar_esta_categoria)
+                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (dbCategorias.ElimiarCategoria(id)) {
@@ -95,7 +96,7 @@ public class VerActivity extends AppCompatActivity {
                             }
 
                         })
-                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 

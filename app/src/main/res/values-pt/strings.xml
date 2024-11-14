@@ -105,4 +105,21 @@
     <string name="categoria_eliminada">Categoria Eliminada</string>
     <string name="tarea_guardada_con_id">"Tarefa guardada com ID: "</string>
     <string name="error_al_guardar_tarea">Erro ao guardar a tarefa</string>
+    <string name="por_favor_completa_todos_los_campos">Preencher todos os campos</string>
+    <string name="error_en_el_formato_de_fecha_o_hora">Erro no formato da data ou da hora</string>
+    <string name="error_al_programar_notificaci_n_de_cumplimiento">Selecionar dias de lembrete</string>
+    <string name="selecciona_los_d_as_de_recordatorio">Selecionar dias de lembrete</string>
+    <string name="aceptar">Aceitar</string>
+    <string name="eliminar_permanentemente">Eliminar permanentemente</string>
+    <string name="seguro_que_quieres_eliminar_esta_tarea_permanentemente">Tem a certeza de que pretende remover esta tarefa permanentemente?</string>
+    <string name="recordatorio_final_de_tarea">"Lembrete da tarefa final: "</string>
+    <string name="desea_eliminar_esta_categoria">Pretende remover esta categoria</string>
+    <string name="si">Sim</string>
+    <string name="no">NÃO</string>
+    <string name="est_seguro_de_que_desea_mover_esta_tarea_a_la_papelera">Tem a certeza de que pretende mover esta tarefa para o lixo?</string>
+    <string name="confirmaci_n">Confirmação</string>
+    <string name="sin_categor_a">Sem categoria</string>
+    <string name="la_tarea_se_ha_movido_a_la_papelera">A tarefa foi movida para a reciclagem.</string>
+    <string name="error_al_mover_la_tarea">A tarefa foi movida para a reciclagem.</string>
+    <string name="tarea_guardada_con_exito">Tarefa guardada com sucesso.</string>
 </resources>
