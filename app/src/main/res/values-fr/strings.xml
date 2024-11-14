@@ -122,4 +122,11 @@
     <string name="la_tarea_se_ha_movido_a_la_papelera">La tâche a été déplacée dans la corbeille.</string>
     <string name="error_al_mover_la_tarea">Erreur lors du déplacement de la tâche</string>
     <string name="tarea_guardada_con_exito">La tâche a été sauvegardée avec succès.</string>
+    <string name="error_al_vaciar_papelera">Erreur lors du vidage de la poubelle</string>
+    <string name="error_al_restaurar">Erreur lors de la restauration</string>
+    <string name="completadas">Terminé</string>
+    <string name="sin_completar">Pas terminé</string>
+    <string name="tareas_completadas">"Tâches accomplies : "</string>
+    <string name="tareas_incompletas">"Tâches incomplètes : "</string>
+    <string name="no_se_encontr_la_categor_a">"Catégorie non trouvée : "</string>
 </resources>

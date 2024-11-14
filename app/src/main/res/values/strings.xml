@@ -126,5 +126,12 @@
     <string name="la_tarea_se_ha_movido_a_la_papelera">La tarea se ha movido a la papelera</string>
     <string name="error_al_mover_la_tarea">Error al mover la tarea</string>
     <string name="tarea_guardada_con_exito">Tarea guardada con exito.</string>
+    <string name="error_al_vaciar_papelera">Error al vaciar papelera</string>
+    <string name="error_al_restaurar">Error al restaurar</string>
+    <string name="completadas">Completadas</string>
+    <string name="sin_completar">Sin completar</string>
+    <string name="tareas_completadas">"Tareas completadas: "</string>
+    <string name="tareas_incompletas">", Tareas incompletas: "</string>
+    <string name="no_se_encontr_la_categor_a">"No se encontró la categoría: "</string>
 
 </resources>

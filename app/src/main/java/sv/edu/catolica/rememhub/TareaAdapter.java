@@ -12,17 +12,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
 
     private final Context context;
-    private final List<Tarea> listaTareas;
+    private final List<Tarea> listaTareas; // Lista original completa
+    private List<Tarea> filteredTasks; // Lista para tareas visibles en la interfaz
     private final TareaDataAccess tareaDataAccess;
 
     public TareaAdapter(Context context, List<Tarea> listaTareas) {
         this.context = context;
         this.listaTareas = listaTareas;
+        this.filteredTasks = new ArrayList<>(listaTareas); // Inicialmente igual a listaTareas
         this.tareaDataAccess = new TareaDataAccess(context);
     }
 
@@ -34,13 +37,13 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
 
     @Override
     public void onBindViewHolder(TareaViewHolder holder, int position) {
-        Tarea tarea = listaTareas.get(position);
+        Tarea tarea = filteredTasks.get(position); // Usamos filteredTasks para la vista
         holder.bind(tarea, position);
     }
 
     @Override
     public int getItemCount() {
-        return listaTareas.size();
+        return filteredTasks.size();
     }
 
     public class TareaViewHolder extends RecyclerView.ViewHolder {
@@ -91,8 +94,10 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             @Override
             protected void onPostExecute(Boolean isMoved) {
                 if (isMoved) {
-                    listaTareas.remove(position);
+                    listaTareas.remove(tarea); // Elimina la tarea de la lista original
+                    filteredTasks.remove(position); // Elimina la tarea de la lista filtrada
                     notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, filteredTasks.size()); // Actualiza las posiciones restantes
                     Toast.makeText(context, R.string.la_tarea_se_ha_movido_a_la_papelera, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, R.string.error_al_mover_la_tarea, Toast.LENGTH_SHORT).show();
@@ -101,10 +106,11 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
         }.execute();
     }
 
-    // Actualiza la lista de tareas en el adaptador
+
+    // Actualiza la lista de tareas visibles en el adaptador
     public void updateData(List<Tarea> newTasks) {
-        listaTareas.clear();
-        listaTareas.addAll(newTasks);
+        filteredTasks.clear();
+        filteredTasks.addAll(newTasks);
         notifyDataSetChanged();
     }
 }

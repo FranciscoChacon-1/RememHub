@@ -81,9 +81,15 @@ public class activity_historial extends AppCompatActivity {
         cursor.close();
         db.close();
 
-        tareaAdapter = new TareaAdapter(this, listaTareas);
-        recyclerViewHistorial.setAdapter(tareaAdapter);
+        // Actualiza la vista con la lista completa
+        if (tareaAdapter == null) {
+            tareaAdapter = new TareaAdapter(this, listaTareas);
+            recyclerViewHistorial.setAdapter(tareaAdapter);
+        } else {
+            tareaAdapter.updateData(new ArrayList<>(listaTareas));  // Actualizamos el adaptador con la lista completa
+        }
     }
+
 
 
     private void openDatePicker() {

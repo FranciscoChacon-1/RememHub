@@ -167,15 +167,26 @@ public class TareaDataAccess {
     }
 
 
+
     // Restaurar tarea desde papelera a tareas
-    public void restaurarTarea(Tarea tarea) {
+    public boolean restaurarTarea(Tarea tarea) {
         SQLiteDatabase db = this.db;
         ContentValues values = new ContentValues();
-        values.put("papelera", 0);  // Cambia la columna 'papelera' a 0
+        values.put("papelera", 0);  // Cambiar a estado "no en papelera"
 
-        db.update("tareas", values, "id = ?", new String[]{String.valueOf(tarea.getId())});
-        db.close();
+        try {
+            int rowsAffected = db.update("Tareas", values, "id = ?", new String[]{String.valueOf(tarea.getId())});
+            if (rowsAffected > 0) {
+                Log.d("Restauracion", "Tarea restaurada correctamente: " + tarea.getTitulo());
+            }
+            return rowsAffected > 0;  // Si al menos una fila fue actualizada
+        } catch (Exception e) {
+            Log.e("TareaDataAccess", "Error al restaurar tarea: ", e);
+            return false;  // Si ocurrió algún error
+        }
     }
+
+
 
 
     // Mover tarea de la papelera de vuelta a tareas

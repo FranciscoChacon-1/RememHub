@@ -1,7 +1,9 @@
 package sv.edu.catolica.rememhub;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -110,13 +112,13 @@ public class activity_resumen extends AppCompatActivity {
             assert taskCursor != null;
             taskCursor.close();
         } else {
-            Log.d(TAG, "No se encontró la categoría: " + categoria); // Log si no se encuentra la categoría
+            Log.d(TAG, getString(R.string.no_se_encontr_la_categor_a) + categoria); // Log si no se encuentra la categoría
         }
         cursor.close();
         db.close();
 
         // Log para verificar el conteo final de tareas completadas e incompletas
-        Log.d(TAG, "Tareas completadas: " + completada + ", Tareas incompletas: " + incompleta);
+        Log.d(TAG, getString(R.string.tareas_completadas) + completada + getString(R.string.tareas_incompletas) + incompleta);
 
         // Actualizar gráfico con los datos obtenidos
         setupPieChart(pieChartByCategory, completada, incompleta);
@@ -126,16 +128,34 @@ public class activity_resumen extends AppCompatActivity {
 
     private void setupPieChart(PieChart pieChart, int completed, int incomplete) {
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(completed, "Completadas"));
-        entries.add(new PieEntry(incomplete, "Sin completar"));
+        entries.add(new PieEntry(completed, getString(R.string.completadas)));
+        entries.add(new PieEntry(incomplete, getString(R.string.sin_completar)));
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(new int[]{ R.color.colorPrimary, R.color.colorAccent }, this);
 
         PieData data = new PieData(dataSet);
+
+        // Cambiar el color del texto según el modo de tema
+        int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            data.setValueTextColor(Color.WHITE); // Texto en blanco para modo noche
+        } else {
+            data.setValueTextColor(Color.BLACK); // Texto en negro para modo día
+        }
+
+        data.setValueTextSize(14f); // Tamaño del texto
         pieChart.setData(data);
-        pieChart.invalidate();
+
+        // Deshabilitar la descripción
+        pieChart.getDescription().setEnabled(false);
+
+        // Cambiar el color del centro del gráfico a gris
+        pieChart.setHoleColor(Color.GRAY);
+
+        pieChart.invalidate(); // Refrescar el gráfico
     }
+
 
     private void cargarTodasLasTareas() {
         RememhubBD dbHelper = new RememhubBD(this);

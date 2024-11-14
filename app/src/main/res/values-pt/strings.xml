@@ -122,4 +122,11 @@
     <string name="la_tarea_se_ha_movido_a_la_papelera">A tarefa foi movida para a reciclagem.</string>
     <string name="error_al_mover_la_tarea">A tarefa foi movida para a reciclagem.</string>
     <string name="tarea_guardada_con_exito">Tarefa guardada com sucesso.</string>
+    <string name="error_al_vaciar_papelera">Erro ao esvaziar o caixote do lixo</string>
+    <string name="error_al_restaurar">Erro ao restaurar</string>
+    <string name="completadas">Concluído</string>
+    <string name="sin_completar">Não concluído</string>
+    <string name="tareas_completadas">"Tarefas concluídas: "</string>
+    <string name="tareas_incompletas">"Tarefas incompletas: "</string>
+    <string name="no_se_encontr_la_categor_a">"Categoria não encontrada: "</string>
 </resources>

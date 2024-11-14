@@ -35,31 +35,35 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
     public void onBindViewHolder(TareaViewHolder holder, int position) {
         Tarea tarea = listaTareas.get(position);
 
-        // Configuración de los textos de los elementos de la tarea
         holder.textTitulo.setText(tarea.getTitulo());
         holder.textCategoria.setText(tarea.getCategoria());
         holder.textFecha.setText(tarea.getFecha());
 
-        // Acción para restaurar la tarea
         holder.btnRestaurar.setOnClickListener(v -> {
-            tareaDataAccess.restaurarTarea(tarea);  // Cambia columna papelera a 0 en la BD
-            listaTareas.remove(position);           // Elimina la tarea de la lista visual
-            notifyItemRemoved(position);            // Notifica el cambio visual
-            Toast.makeText(context, tarea_restaurada, Toast.LENGTH_SHORT).show();
+            boolean isRestored = tareaDataAccess.restaurarTarea(tarea);
+
+            if (isRestored) {
+                listaTareas.remove(position);  // Eliminar de la lista
+                notifyItemRemoved(position);   // Notificar eliminación del item
+                notifyItemRangeChanged(position, listaTareas.size());  // Actualizar posiciones restantes
+                Toast.makeText(context, R.string.tarea_restaurada, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, R.string.error_al_restaurar, Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // Acción para eliminar permanentemente la tarea
         holder.btnEliminar.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle(R.string.eliminar_permanentemente)
                     .setMessage(R.string.seguro_que_quieres_eliminar_esta_tarea_permanentemente)
-                    .setPositiveButton("Sí", (dialog, which) -> {
-                        tareaDataAccess.eliminarTareaConRecordatorio(tarea.getId());  // Elimina de la BD y los recordatorios
-                        listaTareas.remove(position);                    // Remueve de la lista visual
-                        notifyItemRemoved(position);                     // Notifica el cambio
-                        Toast.makeText(context, tarea_eliminada_permanentemente, Toast.LENGTH_SHORT).show();
+                    .setPositiveButton(R.string.si, (dialog, which) -> {
+                        tareaDataAccess.eliminarTareaConRecordatorio(tarea.getId());
+                        listaTareas.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, listaTareas.size()); // Actualizar posiciones restantes
+                        Toast.makeText(context, R.string.tarea_eliminada_permanentemente, Toast.LENGTH_SHORT).show();
                     })
-                    .setNegativeButton("No", null)
+                    .setNegativeButton(R.string.no, null)
                     .show();
         });
     }
@@ -83,11 +87,15 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
         }
     }
 
-    // Método para eliminar todas las tareas de la papelera
+    // Método para vaciar visualmente la lista de tareas
     public void vaciarPapelera() {
-        // Llama al método en TareaDataAccess para eliminar todas las tareas en papelera y sus recordatorios
-        tareaDataAccess.eliminarTareasPapelera();
-        listaTareas.clear(); // Elimina todas las tareas de la lista visual
-        notifyDataSetChanged(); // Notifica que la lista ha cambiado
+        listaTareas.clear();
+        notifyDataSetChanged();
+    }
+
+    // Método para actualizar la lista de tareas
+    public void actualizarTareas(List<Tarea> nuevasTareas) {
+        this.listaTareas = nuevasTareas;
+        notifyDataSetChanged();
     }
 }

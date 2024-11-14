@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
-
 import android.view.View;
 import android.widget.Button;
 
@@ -33,43 +32,46 @@ public class PapeleraActivity extends AppCompatActivity {
 
         cargarTareasPapelera();
 
-        btnVaciarPapelera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vaciarPapelera();
-            }
-        });
+        btnVaciarPapelera.setOnClickListener(v -> vaciarPapelera());
     }
 
     private void cargarTareasPapelera() {
         List<Tarea> listaTareasPapelera = tareaDataAccess.obtenerTareasPapelera();
         if (listaTareasPapelera != null && !listaTareasPapelera.isEmpty()) {
-            adapter = new TareaPapeleraAdapter(this, listaTareasPapelera);
-            recyclerView.setAdapter(adapter);
+            if (adapter == null) {
+                adapter = new TareaPapeleraAdapter(this, listaTareasPapelera);
+                recyclerView.setAdapter(adapter);
+            } else {
+                adapter.actualizarTareas(listaTareasPapelera); // Método para actualizar el listado
+            }
         } else {
+            if (adapter != null) {
+                adapter.vaciarPapelera(); // Limpiar lista visual si ya existe
+            }
             Toast.makeText(this, la_papelera_est_vac_a, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void vaciarPapelera() {
-        // Llama al método en TareaDataAccess para eliminar todas las tareas en papelera y sus días de recordatorio
+        // Intenta vaciar la papelera y notifica cambios visuales
+        List<Tarea> listaTareasPapelera = tareaDataAccess.obtenerTareasPapelera();
+        if (listaTareasPapelera == null || listaTareasPapelera.isEmpty()) {
+            Toast.makeText(this, la_papelera_est_vac_a, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             tareaDataAccess.eliminarTareasPapelera();
             cargarTareasPapelera(); // Recarga la lista después de vaciar la papelera
             Toast.makeText(this, papelera_vaciada, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, menu_inicio.class));
-            finish();
-
-
         } catch (Exception e) {
-            Toast.makeText(this, R.string.la_papelera_est_vac_a, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_al_vaciar_papelera, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         cargarTareasPapelera();
     }
 }
