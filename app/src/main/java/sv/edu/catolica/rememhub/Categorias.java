@@ -22,8 +22,10 @@ public class Categorias {
         this.nombre = nombre;
     }
 
-    public String toString(){
-        return  id + " - " +nombre;
+
+    @Override
+    public String toString() {
+        return nombre; // Solo mostrar el nombre de la categoría en el Spinner
     }
 }
 

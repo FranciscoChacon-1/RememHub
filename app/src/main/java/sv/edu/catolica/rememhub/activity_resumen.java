@@ -107,6 +107,7 @@ public class activity_resumen extends AppCompatActivity {
                     }
                 }
             }
+            assert taskCursor != null;
             taskCursor.close();
         } else {
             Log.d(TAG, "No se encontró la categoría: " + categoria); // Log si no se encuentra la categoría

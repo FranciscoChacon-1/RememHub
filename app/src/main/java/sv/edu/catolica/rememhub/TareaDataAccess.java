@@ -96,13 +96,13 @@ public class TareaDataAccess {
     }
 
     // Mover tarea a la tabla Papelera
-    public void moverTareaAPapelera(Tarea tarea) {
+    public boolean moverTareaAPapelera(Tarea tarea) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("papelera", 1);
-        db.update("Tareas", values, "id = ?", new String[]{String.valueOf(tarea.getId())});
+        int rowsAffected = db.update("Tareas", values, "id = ?", new String[]{String.valueOf(tarea.getId())});
         db.close();
-
+        return rowsAffected > 0; // Devuelve true si la operación fue exitosa
     }
 
     // Método general para obtener tareas filtradas basado en el cumplimiento de la fecha
@@ -220,28 +220,28 @@ public class TareaDataAccess {
         String fechaHoraActual = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime());
         Log.d("FechaHora_actual", "Fecha y hora actual: " + fechaHoraActual);
 
-        String query = "SELECT Tareas.id, Tareas.titulo, Tareas.fecha_creacion, Tareas.fecha_cumplimiento, " +
+        String query = "SELECT Tareas.id, Tareas.titulo, Tareas.fecha_cumplimiento, Tareas.estado, " +
                 "Tareas.hora_cumplimiento, Tareas.hora_recordatorio, Categorias.nombre AS categoria " +
                 "FROM Tareas " +
                 "JOIN Categorias ON Tareas.categoria_id = Categorias.id " +
                 "WHERE Tareas.papelera = 0 AND Tareas.estado = 0 " +
-                "AND (Tareas.fecha_cumplimiento || ' ' || Tareas.hora_cumplimiento) > ?";
+                "AND (Tareas.fecha_cumplimiento || ' ' || Tareas.hora_cumplimiento) >= ?";
 
         try (Cursor cursor = db.rawQuery(query, new String[]{fechaHoraActual})) {
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                     String titulo = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
-                    String fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("fecha_creacion"));
                     String fechaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"));
+                    String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
                     String horaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("hora_cumplimiento"));
                     String horaRecordatorio = cursor.getString(cursor.getColumnIndexOrThrow("hora_recordatorio"));
-                    String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
+
 
                     Log.d("FechaHora_proximas", "Fecha y hora actual: " + fechaHoraActual +
                             ", Fecha y hora de la tarea: " + fechaCumplimiento + " " + horaCumplimiento);
 
-                    Tarea tarea = new Tarea(id, titulo, categoria, fechaCreacion, fechaCumplimiento, horaCumplimiento, horaRecordatorio);
+                    Tarea tarea = new Tarea(id, titulo, fechaCumplimiento, categoria, fechaCumplimiento, horaCumplimiento, horaRecordatorio);
                     tareasProximas.add(tarea);
                 } while (cursor.moveToNext());
             }
@@ -253,44 +253,6 @@ public class TareaDataAccess {
     }
 
 
-    public List<Tarea> obtenerTareasExpiradas() {
-        List<Tarea> tareasExpiradas = new ArrayList<>();
-
-        // Fecha y hora actual en formato completo
-        String fechaHoraActual = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime());
-        Log.d("FechaHora_expirada", "Fecha y hora actual: " + fechaHoraActual);
-
-        String query = "SELECT Tareas.id, Tareas.titulo, Tareas.fecha_creacion, Tareas.fecha_cumplimiento, " +
-                "Tareas.hora_cumplimiento, Tareas.hora_recordatorio, Categorias.nombre AS categoria " +
-                "FROM Tareas " +
-                "JOIN Categorias ON Tareas.categoria_id = Categorias.id " +
-                "WHERE Tareas.papelera = 0 AND Tareas.estado = 0 " +
-                "AND (Tareas.fecha_cumplimiento || ' ' || Tareas.hora_cumplimiento) <= ?";
-
-        try (Cursor cursor = db.rawQuery(query, new String[]{fechaHoraActual})) {
-            if (cursor.moveToFirst()) {
-                do {
-                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                    String titulo = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
-                    String fechaCreacion = cursor.getString(cursor.getColumnIndexOrThrow("fecha_creacion"));
-                    String fechaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("fecha_cumplimiento"));
-                    String horaCumplimiento = cursor.getString(cursor.getColumnIndexOrThrow("hora_cumplimiento"));
-                    String horaRecordatorio = cursor.getString(cursor.getColumnIndexOrThrow("hora_recordatorio"));
-                    String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
-
-                    Log.d("FechaHora_expiradas", "Fecha y hora actual: " + fechaHoraActual +
-                            ", Fecha y hora de la tarea: " + fechaCumplimiento + " " + horaCumplimiento);
-
-                    Tarea tarea = new Tarea(id, titulo, categoria, fechaCreacion, fechaCumplimiento, horaCumplimiento, horaRecordatorio);
-                    tareasExpiradas.add(tarea);
-                } while (cursor.moveToNext());
-            }
-        } catch (SQLException e) {
-            Log.e("TareaDataAccess", "Error al obtener tareas expiradas", e);
-        }
-
-        return tareasExpiradas;
-    }
 
     // Obtener tareas de la papelera (tareas marcadas como eliminadas, es decir, papelera = 1)
     public List<Tarea> obtenerTareasPapelera() {

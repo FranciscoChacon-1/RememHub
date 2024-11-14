@@ -63,14 +63,6 @@
             android:paddingTop="4dp" />
 
         <!-- TextView para los días de recordatorio -->
-        <TextView
-            android:id="@+id/textViewDiasRecordatorio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lun_mar_mi"
-            android:textSize="12sp"
-            android:textColor="#FF0000"
-            android:paddingTop="4dp" />
 
         <Button
             android:id="@+id/btnEliminar"

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Tarea {
     private int id;
@@ -181,5 +182,16 @@ public class Tarea {
     // Método getter para obtener la fecha de creación
     public String getFechaCreacion() {
         return fechaCreacion;
+    }
+
+    public long getFechaHoraCumplimientoEnMillis() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        try {
+            Date fechaHora = sdf.parse(fechaCumplimiento + " " + horaCumplimiento);
+            return fechaHora != null ? fechaHora.getTime() : 0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package sv.edu.catolica.rememhub;
 
+import static sv.edu.catolica.rememhub.R.string.categoria_eliminada;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -83,8 +85,11 @@ public class VerActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (dbCategorias.ElimiarCategoria(id)) {
-                                    Toast.makeText(VerActivity.this, "Categoria Eliminada", Toast.LENGTH_SHORT).show();
-                                    lista();
+                                    Toast.makeText(VerActivity.this, categoria_eliminada, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(VerActivity.this, Categoria_activity.class);
+                                    intent.putExtra("ID", id);
+                                    startActivity(intent);
+                                    finish();
 
                                 }
                             }
@@ -99,11 +104,6 @@ public class VerActivity extends AppCompatActivity {
             }
         });
 
-    }
-    private void lista(){
-        Intent intent = new Intent(this, Categoria_activity.class);
-        startActivity(intent);
-        finish();
     }
 
 

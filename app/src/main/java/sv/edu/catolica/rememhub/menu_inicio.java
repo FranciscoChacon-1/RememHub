@@ -15,7 +15,7 @@ public class menu_inicio extends AppCompatActivity {
     }
 
     public void AnadirTarea(View view) {
-        Intent intent = new Intent(this, Añadirtarea.class); // Redirige a Añadirtarea
+        Intent intent = new Intent(this, Anadirtarea.class); // Redirige a Añadirtarea
         startActivity(intent);
     }
 
@@ -39,10 +39,6 @@ public class menu_inicio extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void Configuracion(View view) {
-        Intent intent = new Intent(this, activity_configuracion.class); // Redirige a activity_configuracion
-        startActivity(intent);
-    }
 
     public void Resumen(View view) {
         Intent intent = new Intent(this, activity_resumen.class); // Redirige a activity_resumen

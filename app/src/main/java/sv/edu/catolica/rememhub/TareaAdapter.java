@@ -10,16 +10,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
-    private Context context;
-    private List<Tarea> listaTareas;
-    private TareaDataAccess tareaDataAccess;
+
+    private final Context context;
+    private final List<Tarea> listaTareas;
+    private final TareaDataAccess tareaDataAccess;
 
     public TareaAdapter(Context context, List<Tarea> listaTareas) {
         this.context = context;
@@ -36,51 +35,7 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
     @Override
     public void onBindViewHolder(TareaViewHolder holder, int position) {
         Tarea tarea = listaTareas.get(position);
-        holder.textTitulo.setText(tarea.getTitulo());
-        holder.textCategoria.setText(tarea.getCategoria() != null ? tarea.getCategoria() : "Sin categoría");
-        holder.textFecha.setText(tarea.getFecha());
-        holder.checkBox.setChecked(tarea.isCompletada()); // Chequear según el estado
-        holder.checkBox.setEnabled(false);  // Desactivar el cambio del checkbox
-
-        // Configurar el botón de eliminar
-        holder.btnEliminar.setOnClickListener(v -> {
-            mostrarDialogoConfirmacion(tarea, holder.checkBox, position);
-        });
-    }
-
-    // Método para mostrar el cuadro de diálogo de confirmación al eliminar una tarea
-    private void mostrarDialogoConfirmacion(Tarea tarea, CheckBox checkBox, int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Confirmación");
-        builder.setMessage("¿Está seguro de que desea mover esta tarea a la papelera?");
-
-        builder.setPositiveButton("Sí", (dialog, which) -> {
-            moverTareaAPapelera(tarea, position);
-        });
-
-        builder.setNegativeButton("No", (dialog, which) -> checkBox.setChecked(tarea.isCompletada()));
-        builder.setOnCancelListener(dialog -> checkBox.setChecked(tarea.isCompletada()));
-        builder.show();
-    }
-
-    // Método para mover la tarea a la papelera de forma asincrónica
-    @SuppressLint("StaticFieldLeak")
-    private void moverTareaAPapelera(final Tarea tarea, final int position) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                // Llamar al método de TareaDataAccess para mover la tarea
-                tareaDataAccess.moverTareaAPapelera(tarea);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                listaTareas.remove(position);
-                notifyItemRemoved(position);
-                Toast.makeText(context, "La tarea se ha movido a la papelera", Toast.LENGTH_SHORT).show();
-            }
-        }.execute();
+        holder.bind(tarea, position);
     }
 
     @Override
@@ -88,10 +43,10 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
         return listaTareas.size();
     }
 
-    public static class TareaViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
-        TextView textTitulo, textCategoria, textFecha, textDiasRecordatorio;
-        Button btnEliminar; // Declaración del botón de eliminar
+    public class TareaViewHolder extends RecyclerView.ViewHolder {
+        private final CheckBox checkBox;
+        private final TextView textTitulo, textCategoria, textFecha, textDiasRecordatorio;
+        private final Button btnEliminar;
 
         public TareaViewHolder(View itemView) {
             super(itemView);
@@ -100,11 +55,53 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             textCategoria = itemView.findViewById(R.id.textViewCategoriaTarea);
             textFecha = itemView.findViewById(R.id.textViewFechaTarea);
             textDiasRecordatorio = itemView.findViewById(R.id.textViewDiasRecordatorio);
-            btnEliminar = itemView.findViewById(R.id.btnEliminar); // Inicialización del botón de eliminar
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
+        }
+
+        public void bind(Tarea tarea, int position) {
+            textTitulo.setText(tarea.getTitulo());
+            textCategoria.setText(tarea.getCategoria() != null ? tarea.getCategoria() : "Sin categoría");
+            textFecha.setText(tarea.getFecha());
+            checkBox.setChecked(tarea.isCompletada());
+            checkBox.setEnabled(false);
+
+            btnEliminar.setOnClickListener(v -> mostrarDialogoConfirmacion(tarea, position));
         }
     }
 
-    // Método para actualizar la lista de tareas en el adaptador
+    // Muestra un cuadro de diálogo de confirmación antes de eliminar una tarea
+    private void mostrarDialogoConfirmacion(Tarea tarea, int position) {
+        new AlertDialog.Builder(context)
+                .setTitle("Confirmación")
+                .setMessage("¿Está seguro de que desea mover esta tarea a la papelera?")
+                .setPositiveButton("Sí", (dialog, which) -> moverTareaAPapelera(tarea, position))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    // Mueve la tarea a la papelera en segundo plano
+    @SuppressLint("StaticFieldLeak")
+    private void moverTareaAPapelera(Tarea tarea, int position) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                return tareaDataAccess.moverTareaAPapelera(tarea);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isMoved) {
+                if (isMoved) {
+                    listaTareas.remove(position);
+                    notifyItemRemoved(position);
+                    Toast.makeText(context, "La tarea se ha movido a la papelera", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Error al mover la tarea", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute();
+    }
+
+    // Actualiza la lista de tareas en el adaptador
     public void updateData(List<Tarea> newTasks) {
         listaTareas.clear();
         listaTareas.addAll(newTasks);

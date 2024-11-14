@@ -61,7 +61,9 @@ public class EditarActivity extends AppCompatActivity {
                 if (!txtNombre.getText().toString().equals("")){
                     correcto = dbCategorias.editarCategoria(id, txtNombre.getText().toString());
                     if (correcto){
-                        Toast.makeText(EditarActivity.this, "Categoria Actualizada", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditarActivity.this,
+                                R.string.categoria_actualizada,
+                                Toast.LENGTH_SHORT).show();
                         verRegistro();
                         // Regresar a MainActivity
                         Intent intent = new Intent(EditarActivity.this, Categoria_activity.class);
@@ -72,9 +74,8 @@ public class EditarActivity extends AppCompatActivity {
                     }else{
                         Toast.makeText(EditarActivity.this, R.string.error_al_actualizar, Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(EditarActivity.this, "El campo no puede estar vacio", Toast.LENGTH_SHORT).show();
-                }
+                }else
+                    Toast.makeText(EditarActivity.this, R.string.el_campo_no_puede_estar_vacio, Toast.LENGTH_SHORT).show();
             }
 
         });

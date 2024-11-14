@@ -25,11 +25,12 @@
                 android:paddingBottom="8dp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewExpiradas"
+                android:id="@+id/recyclerViewProximas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
                 android:layout_marginBottom="16dp" />
+
 
             <TextView
                 android:id="@+id/mensajeProximas"
@@ -42,22 +43,6 @@
                 android:layout_marginTop="8dp" />
 
             <!-- Tareas Expiradas -->
-            <TextView
-                android:id="@+id/textViewExpiradas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txtExpiradas"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingBottom="8dp" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewProximas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:id="@+id/mensajeExpiradas"

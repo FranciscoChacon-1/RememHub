@@ -93,4 +93,18 @@
     <string name="dd_mm_yyyy_item">DD/MM/YYYY</string>
     <string name="tarea_1">Tarea 1</string>
     <string name="error_al_actualizar">Error al Actualizar</string>
+    <string name="selecciona_al_menos_un_d_a">Selecciona al menos un día</string>
+    <string name="error_al_obtener_la_categor_a_seleccionada">Error al obtener la categoría seleccionada</string>
+    <string name="tarea_editada_con_xito">Tarea editada con éxito</string>
+    <string name="la_fecha_de_cumplimiento_no_puede_ser_anterior_a_la_fecha_actual">La fecha de cumplimiento no puede ser anterior a la fecha actual</string>
+    <string name="categoria_actualizada">Categoria Actualizada</string>
+    <string name="el_campo_no_puede_estar_vacio">El campo no puede estar vacio</string>
+    <string name="el_nombre_de_la_categor_a_no_puede_estar_vac_o">El nombre de la categoría no puede estar vacío</string>
+    <string name="categor_a_agregada">Categoría Agregada</string>
+    <string name="error_al_guardar_la_categor_a">Error al guardar la Categoría</string>
+    <string name="la_papelera_est_vac_a">La papelera está vacía</string>
+    <string name="papelera_vaciada">Papelera vaciada</string>
+    <string name="tarea_restaurada">Tarea restaurada</string>
+    <string name="tarea_eliminada_permanentemente">Tarea eliminada permanentemente</string>
+    <string name="categoria_eliminada">Categoria Eliminada</string>
 </resources>

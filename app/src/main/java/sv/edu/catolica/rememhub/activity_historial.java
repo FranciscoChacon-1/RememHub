@@ -21,8 +21,6 @@ import java.util.Locale;
 public class activity_historial extends AppCompatActivity {
 
     private Button dateButton;
-    private Calendar selectedDate;
-    private EditText searchField;
     private RecyclerView recyclerViewHistorial;
     private TareaAdapter tareaAdapter;
     private RememhubBD dbHelper;
@@ -35,7 +33,7 @@ public class activity_historial extends AppCompatActivity {
 
         dbHelper = new RememhubBD(this);
         dateButton = findViewById(R.id.dateButton);
-        searchField = findViewById(R.id.search);
+        EditText searchField = findViewById(R.id.search);
         recyclerViewHistorial = findViewById(R.id.recyclerViewHistorial);
 
         recyclerViewHistorial.setLayoutManager(new LinearLayoutManager(this));
@@ -93,14 +91,12 @@ public class activity_historial extends AppCompatActivity {
         DatePickerDialog datePicker = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
                     calendar.set(year, month, dayOfMonth);
-                    selectedDate = calendar;
                     updateDateButton(calendar);
                 },
                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancelar", (dialog, which) -> {
             if (which == DatePickerDialog.BUTTON_NEGATIVE) {
-                selectedDate = null;
                 dateButton.setText(R.string.fecha);
                 loadTasks();
             }

@@ -1,5 +1,8 @@
 package sv.edu.catolica.rememhub;
 
+import static sv.edu.catolica.rememhub.R.string.tarea_eliminada_permanentemente;
+import static sv.edu.catolica.rememhub.R.string.tarea_restaurada;
+
 import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +45,7 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
             tareaDataAccess.restaurarTarea(tarea);  // Cambia columna papelera a 0 en la BD
             listaTareas.remove(position);           // Elimina la tarea de la lista visual
             notifyItemRemoved(position);            // Notifica el cambio visual
-            Toast.makeText(context, "Tarea restaurada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, tarea_restaurada, Toast.LENGTH_SHORT).show();
         });
 
         // Acción para eliminar permanentemente la tarea
@@ -54,7 +57,7 @@ public class TareaPapeleraAdapter extends RecyclerView.Adapter<TareaPapeleraAdap
                         tareaDataAccess.eliminarTareaConRecordatorio(tarea.getId());  // Elimina de la BD y los recordatorios
                         listaTareas.remove(position);                    // Remueve de la lista visual
                         notifyItemRemoved(position);                     // Notifica el cambio
-                        Toast.makeText(context, "Tarea eliminada permanentemente", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, tarea_eliminada_permanentemente, Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("No", null)
                     .show();

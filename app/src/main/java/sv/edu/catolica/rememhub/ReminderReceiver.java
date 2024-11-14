@@ -1,29 +1,65 @@
 package sv.edu.catolica.rememhub;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-public class ReminderReceiver extends BroadcastReceiver {
-    private static final String CHANNEL_ID = "tareas_channel"; // Usamos un solo canal
+import java.util.Calendar;
 
-    @SuppressLint("UnsafeProtectedBroadcastReceiver")
+// NOTIS DE RECORDATORIO (recurrentes)
+public class ReminderReceiver extends BroadcastReceiver {
+    private static final String CHANNEL_ID = "tareas_channel";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        String tareaTitulo = intent.getStringExtra("titulo");  // Cambié el nombre a "titulo" para que coincida con el de Añadirtarea.java
-        String tareaDescripcion = intent.getStringExtra("descripcion"); // Igual aquí
+        String tareaTitulo = intent.getStringExtra("titulo");
+        String tareaDescripcion = intent.getStringExtra("descripcion");
+        long tareaId = intent.getLongExtra("tareaId", -1);
 
+        // Verificar el estado y papelera directamente desde la base de datos
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            RememhubBD dbHelper = new RememhubBD(context);
+            db = dbHelper.getReadableDatabase();
+            cursor = db.query("Tareas", new String[]{"estado", "papelera"},
+                    "id = ?", new String[]{String.valueOf(tareaId)},
+                    null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                @SuppressLint("Range") int estado = cursor.getInt(cursor.getColumnIndex("estado"));
+                @SuppressLint("Range") int papelera = cursor.getInt(cursor.getColumnIndex("papelera"));
+
+                if (estado == 1 || papelera == 1) {
+                    cancelarNotificacion(context, tareaId);
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) db.close();
+        }
+
+        mostrarNotificacion(context, tareaTitulo, tareaDescripcion, tareaId);
+    }
+
+    private void mostrarNotificacion(Context context, String titulo, String descripcion, long tareaId) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Crear el canal de notificación si no existe (requerido a partir de Android Oreo)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Tareas Recordatorio";
             String description = "Notificaciones de recordatorio de tareas";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -32,19 +68,23 @@ public class ReminderReceiver extends BroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
 
-
-        // Crear la notificación
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(tareaTitulo)
-                .setContentText(tareaDescripcion)
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)  // Añadir prioridad alta para que sea más visible
-                .setAutoCancel(true)  // Para que la notificación desaparezca cuando el usuario la toque
+                .setContentTitle(titulo)
+                .setContentText(descripcion) // Asegúrate de que la descripción se incluya aquí.
+                .setSmallIcon(R.drawable.icon_recordatorio)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
                 .build();
 
+        // Generar un ID único para la notificación basada en tareaId para que no se duplique
+        int notificationId = (int) (tareaId); // Mantenerlo único por tarea
 
-        // Usar un ID único basado en el tiempo para evitar sobrescribir notificaciones
-        int notificationId = (int) System.currentTimeMillis(); // ID único
         notificationManager.notify(notificationId, notification);
+    }
+
+    private void cancelarNotificacion(Context context, long tareaId) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        int notificationId = (int) (tareaId);
+        notificationManager.cancel(notificationId);
     }
 }

@@ -16,16 +16,6 @@ public class TareaPapelera {
     }
 
 
-    // Método para convertir la fecha de String a Date
-    public Date getFechaCumplimiento() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return sdf.parse(fecha);  // Convierte el String a Date
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;  // En caso de error, retorna null
-        }
-    }
 
     public String getNombre() {
         return nombre;

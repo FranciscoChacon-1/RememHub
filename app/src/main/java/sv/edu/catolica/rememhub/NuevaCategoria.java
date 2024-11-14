@@ -1,5 +1,8 @@
 package sv.edu.catolica.rememhub;
 
+import static sv.edu.catolica.rememhub.R.string.categor_a_agregada;
+import static sv.edu.catolica.rememhub.R.string.error_al_guardar_la_categor_a;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -39,16 +42,16 @@ public class NuevaCategoria extends AppCompatActivity {
                 String nombreCategoria = txtNombre.getText().toString().trim();
 
                 // Validar si el campo está vacío o contiene solo espacios
-                if (nombreCategoria.isEmpty()) {
-                    // Mostrar un mensaje de error si el campo está vacío
-                    Toast.makeText(NuevaCategoria.this, "El nombre de la categoría no puede estar vacío", Toast.LENGTH_SHORT).show();
-                } else {
+                // Mostrar un mensaje de error si el campo está vacío
+                if (nombreCategoria.isEmpty())
+                    Toast.makeText(NuevaCategoria.this, R.string.el_nombre_de_la_categor_a_no_puede_estar_vac_o, Toast.LENGTH_SHORT).show();
+                else {
                     // Si el campo no está vacío, continuar con el proceso de guardar la categoría
                     DbCategorias dbCategorias = new DbCategorias(NuevaCategoria.this);
                     long id = dbCategorias.insertarCategoria(nombreCategoria);
 
                     if (id > 0) {
-                        Toast.makeText(NuevaCategoria.this, "Categoría Agregada", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NuevaCategoria.this, categor_a_agregada, Toast.LENGTH_SHORT).show();
                         limpiar(); // Método para limpiar el campo de entrada
 
                         // Regresar a MainActivity
@@ -58,7 +61,7 @@ public class NuevaCategoria extends AppCompatActivity {
 
                         finish(); // Cierra MainActivity2
                     } else {
-                        Toast.makeText(NuevaCategoria.this, "Error al guardar la Categoría", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NuevaCategoria.this, error_al_guardar_la_categor_a, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

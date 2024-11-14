@@ -1,8 +1,11 @@
 package sv.edu.catolica.rememhub.db;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -15,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import sv.edu.catolica.rememhub.RememhubBD;
+import sv.edu.catolica.rememhub.ReminderReceiver;
 import sv.edu.catolica.rememhub.Tarea;
 
 
@@ -86,5 +90,63 @@ public class DbTareas extends RememhubBD {
         }
         db.close();
         return tareas;
+    }
+
+    // Esta función eliminará los días de recordatorio asociados a una tarea específica.
+    public void eliminarAlarmaTarea(int tareaId, Context context) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Consultar los días de recordatorio de la tarea específica
+        Cursor cursor = db.query("DiasRecordatorio", new String[]{"dia"},
+                "tarea_id = ?", new String[]{String.valueOf(tareaId)}, null, null, null);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String dia = cursor.getString(cursor.getColumnIndex("dia"));
+
+                    // Cancelar el PendingIntent para cada día de recordatorio
+                    Intent intent = new Intent(context, ReminderReceiver.class);
+                    intent.putExtra("tareaId", tareaId);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            context, tareaId + dia.hashCode(), intent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                    );
+
+                    // Cancelar la alarma específica
+                    alarmManager.cancel(pendingIntent);
+                } while (cursor.moveToNext());
+            }
+
+            // Una vez canceladas las alarmas, eliminar los registros de la base de datos
+            db.delete("DiasRecordatorio", "tarea_id = ?", new String[]{String.valueOf(tareaId)});
+
+        } catch (Exception ex) {
+            Log.e("DbTareas", "Error deleting reminder days: " + ex.getMessage());
+        } finally {
+            cursor.close();
+            db.close();
+        }
+    }
+
+
+    // Esta función guardará los días de recordatorio para una tarea específica.
+    public void guardarAlarmas(int tareaId, List<String> dias, String horaRecordatorio) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            for (String dia : dias) {
+                ContentValues values = new ContentValues();
+                values.put("tarea_id", tareaId);
+                values.put("dia", dia);
+                values.put("hora_recordatorio", horaRecordatorio);
+                db.insert("DiasRecordatorio", null, values);
+            }
+        } catch (Exception ex) {
+            Log.e("DbTareas", "Error saving reminder alarms: " + ex.getMessage());
+        } finally {
+            db.close();
+        }
     }
 }

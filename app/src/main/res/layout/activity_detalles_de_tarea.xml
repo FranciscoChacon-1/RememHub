@@ -123,7 +123,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/hora"
-                android:inputType="text"
+                android:inputType="numberDecimal"
                 android:minHeight="48dp"
                 android:textColorHint="#546E7A"
                 tools:ignore="Autofill,VisualLintTextFieldSize" />
@@ -167,7 +167,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/hora_de_recordatorio"
-                android:inputType="text"
+                android:inputType="numberDecimal"
                 android:minHeight="48dp"
                 android:textColorHint="#546E7A"
                 tools:ignore="Autofill,TouchTargetSizeCheck,VisualLintTextFieldSize" />
@@ -182,23 +182,16 @@
                 tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
         </LinearLayout>
 
-        <!-- Checkbox para completada -->
-        <CheckBox
-            android:id="@+id/checkBoxCompletada"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="@string/completada"
-            android:layout_gravity="left"
-            tools:ignore="RtlHardcoded" />
+
 
         <!-- Botones para cancelar y guardar -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="82dp"
             android:orientation="horizontal">
 
-            <Button
+
+        <Button
                 android:id="@+id/btnCancelar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

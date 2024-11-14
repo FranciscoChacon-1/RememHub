@@ -2,202 +2,202 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_tarea"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="40dp"
     android:paddingTop="20dp"
     android:paddingRight="40dp"
     android:paddingBottom="30dp"
-    tools:context=".Categoria_activity">
+    tools:context=".Anadirtarea">
 
     <LinearLayout
-        android:id="@+id/main_tarea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_margin="10dp"
-        android:layout_marginTop="20dp">
+        android:text="@string/a_adir_una_nueva_tarea"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        tools:ignore="Autofill,VisualLintTextFieldSize"/>
+
+    <EditText
+        android:id="@+id/txtTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/titulo_de_la_tarea"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColorHint="#546E7A"
+        android:layout_marginBottom="20dp"
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
+
+    <EditText
+        android:id="@+id/txtDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/descripcion_opcional"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColorHint="#546E7A"
+        android:layout_marginBottom="20dp"
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
+
+    <Spinner
+        android:id="@+id/spCategorias"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:minHeight="48dp" />
 
         <TextView
+            android:id="@+id/textViewFecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|clip_vertical"
-            android:text="@string/a_adir_una_nueva_tarea"
-            android:textSize="20sp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_weight="1"
+            android:ems="10"
+            android:text="@string/fecha_de_tarea"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A"
+            tools:ignore="Autofill,VisualLintTextFieldSize" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/txtTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/etFechaCumplimiento"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/titulo_de_la_tarea"
-            android:inputType="text"
+            android:hint="@string/fecha"
+            android:inputType="date"
             android:minHeight="48dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
             android:textColorHint="#546E7A"
-            android:layout_marginBottom="16dp"
             tools:ignore="Autofill,VisualLintTextFieldSize" />
 
-        <EditText
-            android:id="@+id/txtDescripcion"
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#3F51B5"
+            android:contentDescription="@string/seleccionar_fecha"
+            android:onClick="mostrarCalendario"
+            app:srcCompat="@android:drawable/ic_menu_today"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etHoraCumplimiento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/descripcion_opcional"
-            android:inputType="text"
+            android:hint="@string/hora_tarea"
+            android:backgroundTint="#3F51B5"
+            android:inputType="numberDecimal"
             android:minHeight="48dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
             android:textColorHint="#546E7A"
-            android:layout_marginBottom="16dp"
-            tools:ignore="Autofill,VisualLintTextFieldSize" />
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#3F51B5"
+            android:onClick="mostrarHorario"
+            app:srcCompat="@android:drawable/ic_menu_recent_history"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/configurar_recordatorio"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:orientation="horizontal">
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spDias"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etHoraRecordatorio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/hora_de_recordatorio"
+            android:inputType="numberDecimal"
             android:minHeight="48dp"
-            android:layout_marginBottom="16dp"/>
+            android:textColorHint="#546E7A"
+            tools:ignore="Autofill,TouchTargetSizeCheck,VisualLintTextFieldSize" />/>
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:text="@string/fecha_de_tarea"
-            android:layout_marginBottom="16dp"/>
+        <ImageButton
+            android:id="@+id/imageButtonreloj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#3F51B5"
+            android:onClick="mostrarRecordatorio"
+            app:srcCompat="@android:drawable/ic_menu_recent_history"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="66dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/et1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:hint="@string/fecha"
-                android:inputType="date"
-                android:minHeight="48dp"
-                android:textColorHint="#546E7A"
-                tools:ignore="Autofill" />
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancelar"
+            android:onClick="Cancelar"
+            tools:ignore="ButtonStyle,VisualLintButtonSize" />
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#3F51B5"
-                android:contentDescription="@string/todo6"
-                android:onClick="mostrarCalendario"
-                app:srcCompat="@android:drawable/ic_menu_today"
-                tools:ignore="SpeakableTextPresentCheck"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <EditText
-                android:id="@+id/et2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/hora_tarea"
-                android:inputType="text"
-                android:minHeight="48dp"
-                android:textColorHint="#546E7A"
-                tools:ignore="Autofill" />
-
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#3F51B5"
-                android:onClick="mostrarHorario"
-                app:srcCompat="@android:drawable/ic_menu_recent_history"
-                tools:ignore="ContentDescription,InefficientWeight,SpeakableTextPresentCheck"/>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="@string/configurar_recordatorio"
-            android:layout_marginBottom="16dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="67dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <Spinner
-                android:id="@+id/spDias"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <EditText
-                android:id="@+id/et3"
-                android:layout_width="222dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/hora_de_recordatorio"
-                android:inputType="text"
-                android:minHeight="48dp"
-                android:textColorHint="#546E7A"
-                tools:ignore="Autofill,TouchTargetSizeCheck" />
-
-            <ImageButton
-                android:id="@+id/imageButtonreloj"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#3F51B5"
-                android:onClick="mostrarRecordatorio"
-                app:srcCompat="@android:drawable/ic_menu_recent_history"
-                tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="82dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btncancelar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/cancelar_tarea"
-                android:onClick="Cancelar"
-                tools:ignore="ButtonStyle,VisualLintButtonSize" />
-
-            <Button
-                android:id="@+id/btnguardar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/guardar_tarea"
-                android:onClick="Guardar"
-                tools:ignore="ButtonStyle,VisualLintButtonSize" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/guardar"
+            android:onClick="Guardar"
+            tools:ignore="ButtonStyle,VisualLintButtonSize" />
+    </LinearLayout>
 
     </LinearLayout>
 

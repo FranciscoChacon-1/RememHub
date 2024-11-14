@@ -88,4 +88,19 @@
     <string name="categor_a_1">Catégorie 1</string>
     <string name="dd_mm_yyyy_item">JJ/MM/AAAA</string>
     <string name="tarea_1">Tâche 1</string>
+    <string name="error_al_actualizar">Erreur lors de la mise à jour</string>
+    <string name="selecciona_al_menos_un_d_a">Sélectionnez au moins un jour</string>
+    <string name="error_al_obtener_la_categor_a_seleccionada">Erreur dans l\'obtention de la catégorie sélectionnée</string>
+    <string name="tarea_editada_con_xito">Tâche éditée avec succès</string>
+    <string name="la_fecha_de_cumplimiento_no_puede_ser_anterior_a_la_fecha_actual">La date de mise en conformité ne peut être antérieure à la date actuelle.</string>
+    <string name="categoria_actualizada">Catégorie mise à jour</string>
+    <string name="el_campo_no_puede_estar_vacio">Le camp ne peut pas être vide</string>
+    <string name="el_nombre_de_la_categor_a_no_puede_estar_vac_o">Le nom de la catégorie ne peut être vide</string>
+    <string name="categor_a_agregada">Catégorie d\'agrégat</string>
+    <string name="error_al_guardar_la_categor_a">Erreur de sauvegarde Catégorie</string>
+    <string name="la_papelera_est_vac_a">Le bac est vide</string>
+    <string name="papelera_vaciada">Poubelle vidée</string>
+    <string name="tarea_restaurada">Tâche restaurée</string>
+    <string name="tarea_eliminada_permanentemente">Tâche définitivement supprimée</string>
+    <string name="categoria_eliminada">Catégorie éliminée</string>
 </resources>

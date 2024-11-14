@@ -1,5 +1,9 @@
 package sv.edu.catolica.rememhub;
 
+import static sv.edu.catolica.rememhub.R.string.la_papelera_est_vac_a;
+import static sv.edu.catolica.rememhub.R.string.papelera_vaciada;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +47,7 @@ public class PapeleraActivity extends AppCompatActivity {
             adapter = new TareaPapeleraAdapter(this, listaTareasPapelera);
             recyclerView.setAdapter(adapter);
         } else {
-            Toast.makeText(this, "La papelera está vacía", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, la_papelera_est_vac_a, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -51,12 +55,16 @@ public class PapeleraActivity extends AppCompatActivity {
         // Llama al método en TareaDataAccess para eliminar todas las tareas en papelera y sus días de recordatorio
         tareaDataAccess.eliminarTareasPapelera();
         cargarTareasPapelera(); // Recarga la lista después de vaciar la papelera
-        Toast.makeText(this, "Papelera vaciada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, papelera_vaciada, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, menu_inicio.class));
+        finish();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         cargarTareasPapelera();
     }
 }
