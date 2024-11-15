@@ -85,21 +85,26 @@ public class VerActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                // Intentar eliminar la categoría
                                 if (dbCategorias.ElimiarCategoria(id)) {
                                     Toast.makeText(VerActivity.this, categoria_eliminada, Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(VerActivity.this, Categoria_activity.class);
-                                    intent.putExtra("ID", id);
-                                    startActivity(intent);
-                                    finish();
 
+                                    // Iniciar la nueva actividad y actualizarla
+                                    Intent intent = new Intent(VerActivity.this, Categoria_activity.class); // Cambia CategoriaActivity por el nombre de tu actividad de destino
+                                    intent.putExtra("ID", id); // Si necesitas pasar el ID, puedes hacerlo aquí
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // Limpia la pila de actividades
+                                    startActivity(intent); // Inicia la nueva actividad
+                                    finish(); // Cierra VerActivity
+                                } else {
+                                    Toast.makeText(VerActivity.this, "Error al eliminar la categoría", Toast.LENGTH_SHORT).show();
                                 }
                             }
-
                         })
                         .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                // No hacer nada, solo cerrar el diálogo
+                                dialogInterface.dismiss();
                             }
                         }).show();
             }
